@@ -1,0 +1,33 @@
+# Python 3.11 recommended.
+# Install PyTorch FIRST for your GPU/CPU: https://pytorch.org/get-started/locally/
+#   e.g. CUDA 12.4:  pip install torch --index-url https://download.pytorch.org/whl/cu124
+#   CPU only:        pip install torch
+
+# Core
+numpy>=1.26
+pandas>=2.1
+scikit-learn>=1.4
+matplotlib>=3.8
+seaborn>=0.13
+tqdm>=4.66
+
+# Classical / embeddings
+nltk>=3.8
+gensim>=4.3          # GloVe / word2vec vectors
+
+# Transformers
+transformers>=4.44
+datasets>=2.20
+accelerate>=0.33
+
+# Explainability + demo
+lime>=0.2.0.1
+shap>=0.45
+streamlit>=1.37
+
+# Dev
+pytest>=8.0
+
+# Optional: install only if you need them
+# torch-geometric>=2.5   # GCN/GAT; follow https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html
+# kaggle>=1.6            # download ISOT with the Kaggle CLI

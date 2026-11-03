@@ -1,0 +1,49 @@
+# --- data & model artefacts (never commit) ---
+data/raw/*
+data/processed/*
+!data/README.md
+models/*
+!models/.gitkeep
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+*.onnx
+*.zip
+glove*.txt
+*.kv
+*.npy
+kaggle.json
+
+# --- generated results (runs/*.json and figures ARE committed) ---
+results/summary.csv
+results/pivot_*.csv
+
+# --- experiment trackers / HF caches ---
+wandb/
+mlruns/
+lightning_logs/
+outputs/
+.cache/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+.env
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/settings.json
+.idea/
