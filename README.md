@@ -141,19 +141,16 @@ log_run(model="bilstm", dataset="covid", split="val", metrics=m,
 
 | Member | Role | Owns |
 |---|---|---|
-| _TBD_ | A. Data & evaluation lead | `src/data/`, `src/evaluation/`, EDA, leakage analysis, results tables |
+| _TBD_ | A. Data & evaluation | `src/data/`, `src/evaluation/`, EDA, leakage analysis, results tables |
 | _TBD_ | B. Traditional ML | `src/models/classical.py` |
 | _TBD_ | C. Sequential deep learning | `src/models/sequential.py` |
 | _TBD_ | D. Graph models | `src/models/graph.py` |
 | _TBD_ | E. Transformers | `src/models/transformers_ft.py` |
 | _TBD_ | F. LLM + explainability + demo | `src/models/llm_zero_shot.py`, `src/explain/`, `app/` |
 
-## AI usage
+Slides, the group reflection and the GAI declaration are shared by everyone. **Video editor** is a
+separate volunteer role, claimed by Mon 9 Nov. See [`PROJECT_PLAN.md` §6](PROJECT_PLAN.md#6-roles-and-responsibilities).
 
-This course requires a GAI declaration. The initial repository scaffold (structure, data
-pipeline, metrics utilities, docs) was drafted with AI assistance and is recorded in
-[`docs/ai_usage_log.md`](docs/ai_usage_log.md). All model implementations, experiments and
-analysis are the team's own work, and each member must be able to explain their code in the video.
 
 ## References
 

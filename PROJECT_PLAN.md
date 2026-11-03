@@ -95,16 +95,28 @@ Targets are set from the sanity baseline (TF-IDF + LR) numbers and published res
 
 ## 6. Roles and responsibilities
 
-| Role | Core work | Also owns (to balance workload) | Video segment |
-|---|---|---|---|
-| **A. Data & evaluation lead** | ISOT download and cleaning, EDA (lengths, class balance), leakage table, results tables and cross-format comparison | **Video editing and integration** (data work finishes early) | Intro, datasets, leakage, results |
-| **B. Traditional ML** | `src/models/classical.py`: all classical models + preprocessing ablations | **Slide template + references slide** | Classical models |
-| **C. Sequential DL** | `src/models/sequential.py`: LSTM/BiLSTM/GRU + sensitivity plots | Hyperparameter-tuning theory slide (Week 5) | Sequential models |
-| **D. Graph models** | `src/models/graph.py`: TextGCN/GAT + graph diagrams | Group reflection document (collects everyone's input) | Graph models |
-| **E. Transformers** | `src/models/transformers_ft.py`: BERT variants + efficiency comparison | Exports the demo model for F | Transformers |
-| **F. LLM + XAI + demo** | Zero-shot LLM, LIME/SHAP, Streamlit app | GAI declaration form (compiles `docs/ai_usage_log.md`) | XAI + live demo |
+### Technical roles (one per member)
 
-**Everyone:** writes the slides for their own part, appears in the video, reviews one other member's PR, and logs AI usage.
+| Role | Core work | Video segment |
+|---|---|---|
+| **A. Data & evaluation** | ISOT download and cleaning, EDA (lengths, class balance), leakage table, results tables and cross-format comparison | Datasets, leakage, results |
+| **B. Traditional ML** | `src/models/classical.py`: all classical models + preprocessing ablations | Classical models |
+| **C. Sequential DL** | `src/models/sequential.py`: LSTM/BiLSTM/GRU + hyperparameter sensitivity plots | Sequential models |
+| **D. Graph models** | `src/models/graph.py`: TextGCN/GAT + graph diagrams | Graph models |
+| **E. Transformers** | `src/models/transformers_ft.py`: BERT variants + efficiency comparison; exports the demo model for F | Transformers |
+| **F. LLM + XAI + demo** | Zero-shot LLM, LIME/SHAP, Streamlit app | XAI + live demo |
+
+### Shared by everyone
+
+| Task | How it's split |
+|---|---|
+| **Slides** | Each member makes the slides for their own part. Intro, conclusion and references are divided up at the Wed 11 Nov check-in |
+| **Code review** | Each member reviews at least one other member's PR |
+| **Report** | Everyone records their own segment |
+
+### Separate role: video editor (volunteer, claimed later)
+
+Stitches the recorded segments into the final ≤ 10-minute video (Thu 12 – Sat 14 Nov). Taken on top of a technical role by whoever volunteers; agree by **Mon 9 Nov**. Record it in the group reflection so the extra work is credited.
 
 ---
 
@@ -117,11 +129,11 @@ Targets are set from the sanity baseline (TF-IDF + LR) numbers and published res
 | **Week 12 consultation** (date TBC) | Consultation | All | Bring this plan, the baseline table and §10 questions |
 | **Thu 5 – Fri 6 Nov** | First results | B–F | Every family has a **val** result on ≥ 1 dataset |
 | **Sat 7 – Sun 8 Nov** | Tuning | B–F | Every family has val results on all 3 datasets; sensitivity plots started |
-| **Mon 9 Nov** | 🔒 **Results freeze 1** | B–F | Test results for every family × dataset logged; best models identified |
+| **Mon 9 Nov** | 🔒 **Results freeze 1** | B–F | Test results for every family × dataset logged; best models identified; video editor volunteer confirmed |
 | **Tue 10 Nov** | XAI + demo | F, A | LIME/SHAP figures; Streamlit app runs with the best model; slides drafted |
 | **Wed 11 Nov** | 🔒 **Final freeze** | All | No new experiments; slides complete; script written (~1,400 words for 10 min) |
 | **Thu 12 Nov** | Recording | All | Each member records their segment (voice + code walkthrough) |
-| **Fri 13 Nov** | Editing | A | Full first cut ≤ 10 min; reflection draft; AI usage log compiled |
+| **Fri 13 Nov** | Editing | Video editor; all | Full first cut ≤ 10 min; everyone's reflection section written; AI usage log complete |
 | **Sat 14 Nov** | Final checks + **submit** | All | §9 checklist complete; signatures collected; submitted |
 | **Sun 15 Nov** | Buffer | — | Deadline 11:59 pm. Do the peer evaluation when it is released |
 
@@ -131,7 +143,7 @@ Targets are set from the sanity baseline (TF-IDF + LR) numbers and published res
 
 | Time | Segment | Presenter | Show |
 |---|---|---|---|
-| 0:00–0:50 | Problem, research question, targets (R1–R6) | A | Slides |
+| 0:00–0:50 | Problem, research question, targets (R1–R6) | TBD | Slides |
 | 0:50–1:50 | Datasets, cleaning, **leakage table** | A | Slides + `prepare_data` code |
 | 1:50–3:00 | Traditional ML | B | Theory slide + code + results |
 | 3:00–4:10 | Sequential DL + hyperparameter sensitivity | C | Architecture diagram + plots |
@@ -140,7 +152,7 @@ Targets are set from the sanity baseline (TF-IDF + LR) numbers and published res
 | 6:30–7:40 | LLM zero-shot + explainability | F | Prompt + LIME/SHAP figures |
 | 7:40–8:40 | Cross-format comparison + interpretation | A | Summary table + key insights |
 | 8:40–9:40 | Live Streamlit demo | F | App |
-| 9:40–10:00 | Conclusion, limitations, references | B | Slides |
+| 9:40–10:00 | Conclusion, limitations, references | TBD | Slides |
 
 ---
 
