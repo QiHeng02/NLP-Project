@@ -3,10 +3,11 @@
 Usage (from the repo root):
     python -m scripts.prepare_data                 # all three datasets
     python -m scripts.prepare_data --datasets liar covid
-    python -m scripts.prepare_data --isot-include-title --isot-strip-style   # ablations
 
 The output is deterministic (fixed seed), so every member can regenerate
 identical splits locally instead of passing data files around.
+ISOT ablation variants (no web clutter, with headline) are built separately by
+`python -m scripts.make_isot_ablation`, so the main ISOT split is never overwritten.
 """
 from __future__ import annotations
 
@@ -45,15 +46,12 @@ def _basic_clean(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     return df, report
 
 
-def prepare(dataset: str, *, include_title: bool, strip_style: bool) -> None:
+def prepare(dataset: str) -> None:
     raw_dir = DOWNLOADERS[dataset]()
     if raw_dir is None:  # ISOT manual download still pending
         return
     if dataset == "isot":
-        clean, report = clean_isot(
-            load_isot_raw(raw_dir), include_title=include_title, strip_style=strip_style
-        )
-        report["options"] = {"include_title": include_title, "strip_style": strip_style}
+        clean, report = clean_isot(load_isot_raw(raw_dir))
         _save(stratified_split(clean), "isot", report)
     elif dataset == "liar":
         df, report = _basic_clean(load_liar_raw(raw_dir))
@@ -67,11 +65,9 @@ def prepare(dataset: str, *, include_title: bool, strip_style: bool) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--datasets", nargs="+", choices=DATASETS, default=list(DATASETS))
-    parser.add_argument("--isot-include-title", action="store_true")
-    parser.add_argument("--isot-strip-style", action="store_true")
     args = parser.parse_args()
     for name in args.datasets:
-        prepare(name, include_title=args.isot_include_title, strip_style=args.isot_strip_style)
+        prepare(name)
 
 
 if __name__ == "__main__":

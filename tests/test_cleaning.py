@@ -1,7 +1,7 @@
 import pandas as pd
 
 from src.config import LABEL_FAKE, LABEL_REAL
-from src.data.cleaning import clean_isot, strip_source_markers
+from src.data.cleaning import clean_isot, strip_source_markers, strip_style_markers
 from src.data.loaders import liar_to_binary
 from src.data.splits import stratified_split
 
@@ -14,6 +14,21 @@ def test_strips_reuters_dateline_variants():
     assert strip_source_markers("(Reuters) - " + BODY).strip() == BODY
     assert "reuters" not in strip_source_markers("Officials told Reuters on Monday.").lower()
     assert "reuters" not in strip_source_markers("Follow @ReutersPolitics and #ReutersPoll").lower()
+
+
+def test_strip_style_markers_removes_web_clutter():
+    text = (
+        "The senator spoke on Monday. Featured image via Chip Somodevilla/Getty Images. "
+        "See https://t.co/abc123 pic.twitter.com/XyZ "
+        "— Donald J. Trump (@realDonaldTrump) December 31, 2017 "
+        "(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; "
+        "fjs.parentNode.insertBefore(js, fjs); }(document, script , facebook-jssdk )); "
+        "//<![CDATA[ more //]]> The vote passed."
+    )
+    out = strip_style_markers(text).lower()
+    for clutter in ("somodevilla", "getty", "http", "pic.twitter", "@realdonaldtrump", "fjs", "cdata"):
+        assert clutter not in out, clutter
+    assert "the senator spoke on monday" in out and "the vote passed" in out
 
 
 def _isot(rows):
