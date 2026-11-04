@@ -18,11 +18,21 @@ from src.config import ISOT_MIN_CHARS
 # "WASHINGTON (Reuters) - ", "SEOUL/BEIJING (Reuters) – ", or a bare "(Reuters) - "
 _REUTERS_DATELINE = re.compile(r"^\s*(?:[A-Z][\w.'’/,\- ]{0,80}?\s)?\(Reuters\)\s*[-–—]\s*")
 _REUTERS_TOKEN = re.compile(r"\S*reuters\S*", flags=re.IGNORECASE)
-# Optional: web-publishing residue that mostly appears in ISOT's fake class.
-_STYLE_MARKERS = re.compile(
-    r"(featured image (via|by|credit)[^\n]*$)|(\bgetty images\b)|(\bscreenshot\b)",
-    flags=re.IGNORECASE | re.MULTILINE,
-)
+# Web clutter that mostly appears in ISOT's fake class (used by the "nostyle" ablation).
+# Order matters: remove whole code snippets and tweet signatures before links and handles.
+_STYLE_PATTERNS = [
+    # Facebook / Twitter embed scripts: "(function(d, s, id) { var js, fjs = ... facebook-jssdk"
+    r"!?\(?function\s*\(d,\s*s,\s*id\).{0,800}?(?:facebook-jssdk|twitter-wjs)\W{0,10}",
+    # Embedded tweet signature: "— Donald J. Trump (@realDonaldTrump) December 31, 2017"
+    r"[—–-]\s*[^()\n]{1,60}\(@\w+\)\s+[A-Z][a-z]+\s+\d{1,2},\s+\d{4}",
+    # Links and embedded tweet images
+    r"https?://\S+|www\.\S+|pic\.twitter\.com/\S+",
+    # Photo credits: "Featured image via Chip Somodevilla/Getty Images", "Photo by ..."
+    r"\b(?:featured\s+)?(?:image|photo|picture)s?\s+(?:via|by|credit|courtesy\s+of)\b:?[^.\n]{0,80}",
+    # Leftover page-code tokens, platform names and handles
+    r"\S*cdata\S*|\bfjs\b|\bgetty\s+images\b|\bflickr\b|\bscreenshot\b|@\w+",
+]
+_STYLE_MARKERS = [re.compile(p, flags=re.IGNORECASE | re.DOTALL) for p in _STYLE_PATTERNS]
 _WS = re.compile(r"\s+")
 _NON_ALNUM = re.compile(r"[^a-z0-9]+")
 
@@ -43,7 +53,11 @@ def strip_source_markers(text: str) -> str:
 
 
 def strip_style_markers(text: str) -> str:
-    return _STYLE_MARKERS.sub(" ", str(text))
+    """Remove web clutter: embed scripts, tweet signatures, links, photo credits, handles."""
+    text = str(text)
+    for pattern in _STYLE_MARKERS:
+        text = pattern.sub(" ", text)
+    return text
 
 
 def clean_isot(

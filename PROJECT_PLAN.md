@@ -51,8 +51,8 @@ Targets are set from the sanity baseline (TF-IDF + LR) numbers and published res
 2. **Strip the "(Reuters)" dateline and the word "Reuters"** (present in ~99% of real articles and ~0% of fake ones).
 3. **Drop near-empty bodies** (< 50 characters); almost all are fake.
 4. **Remove duplicates before splitting.** A naive split puts ~19% of test articles verbatim into training. Texts that appear under both labels are dropped entirely.
-5. **Body text only by default.** Headlines carry style cues (fake headlines are often ALL CAPS). `--isot-include-title` exists as an ablation.
-6. Style residue ("Featured image via…", "Getty Images") is **kept by default** and can be removed with `--isot-strip-style` as an ablation experiment.
+5. **Body text only.** Headlines may carry style cues; tested separately via `python -m scripts.make_isot_ablation --variant title`.
+6. **Web clutter** (links, embedded tweets/code, photo credits) is kept in the main data and tested separately via `--variant nostyle`, so the main split never changes.
 
 **Model-specific preprocessing** (stopwords, lemmatisation, tokenisation) belongs to each model owner, because different models need different inputs. Compare with vs without stopword removal and lemmatisation in the classical models.
 

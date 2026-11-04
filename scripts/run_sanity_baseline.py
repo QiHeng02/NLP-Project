@@ -10,6 +10,7 @@ Usage:
     python -m scripts.run_sanity_baseline
     python -m scripts.run_sanity_baseline --datasets liar covid --author "Your Name"
     python -m scripts.run_sanity_baseline --datasets isot --leakage
+    python -m scripts.run_sanity_baseline --datasets isot_nostyle   # any folder in data/processed/
 """
 from __future__ import annotations
 
@@ -78,7 +79,8 @@ def run_isot_leakage(author: str | None) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--datasets", nargs="+", choices=DATASETS, default=list(DATASETS))
+    parser.add_argument("--datasets", nargs="+", default=list(DATASETS),
+                        help="folder names in data/processed/ (default: isot liar covid)")
     parser.add_argument("--leakage", action="store_true", help="also run the ISOT leakage checks")
     parser.add_argument("--author", default=None)
     args = parser.parse_args()
