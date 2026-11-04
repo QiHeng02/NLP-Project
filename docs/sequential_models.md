@@ -64,7 +64,9 @@ val for early stopping → score → `log_run` to `results/runs/` → optionally
 | `isot_nostyle` | isot_nostyle | `label` | binary | 512 |
 | `isot_title` | isot_title | `label` | binary | 512 |
 
-Max lengths come from Role A's token-length table in `notebooks/01_QH_eda.ipynb`.
+Max lengths come from Role A's token-length table in `notebooks/01_QH_eda.ipynb`. Note that this
+model counts **words** (its own tokeniser), while A's table counts BERT sub-word tokens, so 512 words
+covers more of an article than BERT's 512-token limit.
 `isot_nostyle` (web clutter removed) and `isot_title` (headline added) are Role A's ISOT ablation
 variants from PR #2: same articles and splits, only the text changes. Build them once with
 `python -m scripts.make_isot_ablation --variant nostyle` / `--variant title`. They only run when named
@@ -102,14 +104,14 @@ Defaults = PROJECT_PLAN.md §5 (GloVe 100d, hidden 128, dropout 0.3, Adam 1e-3, 
 | PyTorch (CUDA build) | **C**, **F** (to load C's model) | See step 1 below. `requirements.txt` does not install it |
 | Processed data | **C** (and every role) | `python -m scripts.prepare_data`, see [`data/README.md`](../data/README.md) |
 | GloVe 6B 100d (~330 MB) | **C**, **B** (GloVe-avg features), D (optional) | See step 3 below. Git-ignored |
-| C's saved model `.pt` | **F** | Ask C; checkpoints are git-ignored |
+| C's saved model `.pt` | **F** | Google Drive zip from C (see §3.4); checkpoints are git-ignored |
 
 1. **PyTorch with CUDA**:
    ```bash
    pip install torch --index-url https://download.pytorch.org/whl/cu124
    python -c "import torch; print(torch.cuda.is_available())"   # should print True
    ```
-   CPU also works, but ISOT at 512 tokens will be slow.
+   CPU also works, but training ISOT at 512 words will be slow.
 2. **Processed data**: `python -m scripts.prepare_data`.
 3. **GloVe 6B 100d**:
    ```bash
@@ -138,8 +140,10 @@ python -m scripts.run_sequential_sweep --dry-run                      # list run
 # ...or a single sensitivity run by hand
 python -m scripts.run_sequential --models bilstm --datasets isot --max-len 256 --notes "sens: max_len"
 
-# Final: chosen settings, score test once, save the model
-python -m scripts.run_sequential --models bilstm --datasets liar --test --save --author "<name>"
+# Final: chosen settings, score test once, save the model (the exact commands behind the test results)
+python -m scripts.run_sequential --models bilstm --datasets isot --truncate head_tail --test --save --author "<name>"
+python -m scripts.run_sequential --models bilstm --datasets liar --dropout 0.5 --test --save --author "<name>"
+python -m scripts.run_sequential --models bilstm --datasets liar6 covid --test --save --author "<name>"
 ```
 
 Each epoch prints `train_loss`, `val_f1_macro` and time. Each run writes one JSON to `results/runs/`
@@ -152,10 +156,11 @@ PyTorch 2.6 + CUDA 12.4. No shared cluster is needed.
 
 | | Measured per epoch | Per run (~6–12 epochs) |
 |---|---|---|
-| LIAR / LIAR-6 (64 tokens) | ~1–2 s | < 1 min |
-| ISOT, BiLSTM (512 tokens) | 27.5 s | ~3–6 min |
+| LIAR / LIAR-6 (64 words) | ~1–2 s | < 1 min |
+| ISOT, BiLSTM (512 words) | 27.5 s | ~3–6 min |
 
-Plus ~15 s per command to load GloVe. All ~30 planned runs total roughly 1.5–2 h.
+Plus ~15 s per command to load GloVe. Actual totals: Phase 1 (12 runs) ~13 min, Phase 2 (18 runs)
+~71 min, final runs (4) ~10 min, so ~1.6 h of training overall.
 
 ---
 
@@ -224,7 +229,11 @@ exp = LimeTextExplainer(class_names=["real", "fake"]).explain_instance(text, mod
 - Expected paths: `models/sequential/<isot|liar|liar6|covid>/<lstm|bilstm|gru>.pt`.
 - For `liar6`, `classes_` is the 6 label strings in alphabetical order, not the truthfulness order.
   Use `classes_` to label the columns.
-- Should be fast enough for the demo on CPU (target R4: < 1 s per input). Not yet timed; C will confirm with the final model.
+- CPU speed per single input (final models): ISOT 19 ms, LIAR / LIAR-6 1.4 ms, COVID 2.9 ms, well under
+  target R4 (< 1 s). LIME calls `predict_proba` on thousands of perturbed texts per explanation, so ISOT
+  explanations take longer than single predictions.
+- Final models: `models/sequential/<isot|liar|liar6|covid>/bilstm.pt` (~32 MB total), shared as a zip
+  on Google Drive. Unzip into `models/` so the paths above work.
 
 ---
 
@@ -232,7 +241,7 @@ exp = LimeTextExplainer(class_names=["real", "fake"]).explain_instance(text, mod
 
 **Done (Role C)**
 - [x] Environment: PyTorch 2.6 + CUDA 12.4 on NVIDIA GeForce RTX 4050 Laptop GPU (6 GB)
-- [x] Timing check: ISOT BiLSTM at 512 tokens = 27.5 s per epoch, so no cluster needed
+- [x] Timing check: ISOT BiLSTM at 512 words = 27.5 s per epoch, so no cluster needed
 - [x] Data prepared; sanity baseline reproduces Role A's numbers exactly (ISOT 0.980, LIAR 0.592, LIAR-6 0.252, COVID 0.929)
 - [x] GloVe 6B 100d downloaded
 - [x] `src/models/sequential.py` and `scripts/run_sequential.py` written
@@ -242,9 +251,13 @@ exp = LimeTextExplainer(class_names=["real", "fake"]).explain_instance(text, mod
 - [x] **Phase 2 runs complete:** 18 BiLSTM val runs (15 sensitivity + 3 ISOT checks)
 - [x] **Phase 2 plots:** `notebooks/02_AR_sequential_sensitivity.ipynb` → `results/figures/`:
   `seq_phase1_models.png`, `seq_sens_max_len.png`, `seq_sens_settings.png`, `seq_isot_checks.png`
+- [x] **Phase 3 complete:** 4 final BiLSTM runs scored on test once, models saved to `models/sequential/`
+- [x] Checks: saved models reproduce the logged test scores on CPU; test used only by the 4 final runs;
+  `python -m scripts.collect_results` picks up exactly the 4 final runs
 
 **Next (Role C)**
-- [ ] Phase 3: final test runs with the settings below, save best models and send `.pt` files to Role F, open PR (by Mon 9 Nov freeze)
+- [ ] Share the 4 `.pt` files with Role F (Google Drive)
+- [ ] Get PR #3 reviewed and merged (by Mon 9 Nov freeze)
 
 ### Phase 1 results (val)
 
@@ -262,11 +275,11 @@ LIAR 64 / COVID 128. Runtime: ISOT 2.5–5.5 min per model, all others < 30 s.
 
 **Takeaways**
 - **BiLSTM is the best sequential model** (best on 3 of 4 tasks), so it is used for Phase 2.
-- **COVID: word order helps.** BiLSTM 0.955 vs 0.924, already above target R2a (≥ 0.95) on val.
-- **LIAR: no gain over TF-IDF.** All three are ~0.61–0.62 (target R2b ≥ 0.63 not met). BiLSTM peaked at
-  epoch 1 and stopped after 4, so it overfits LIAR's small training set almost immediately. Dropout and
-  frozen-vs-trainable embeddings are tested in Phase 2.
-- **LIAR-6: small gain.** BiLSTM accuracy 0.272 meets target R2c (≥ 0.27); macro-F1 0.269 vs 0.238.
+- **COVID:** BiLSTM 0.955 vs TF-IDF 0.924 (+0.031). LSTM (one direction) scored 0.917, below TF-IDF.
+- **LIAR:** all three are ~0.61–0.62, level with TF-IDF (0.619). BiLSTM peaked at epoch 1 and stopped
+  after 4, so it overfits LIAR's small training set almost immediately. Dropout and frozen-vs-trainable
+  embeddings are tested in Phase 2.
+- **LIAR-6:** BiLSTM accuracy 0.272 vs 0.260; macro-F1 0.269 vs 0.238 (val; see test results below).
 - **ISOT: near-perfect (0.995–0.997), likely too easy.** Role A's PR #2 found TF-IDF does not depend on
   web clutter (0.980 on `isot_nostyle`). Phase 2 checks the same for BiLSTM (it doesn't either; see below).
 - GloVe coverage of each vocabulary: LIAR 98%, ISOT 90%, COVID 89% (hashtags, URLs, slang).
@@ -309,38 +322,17 @@ Phase 1 BiLSTM result). Macro-F1. Run: `python -m scripts.run_sequential_sweep`.
   run-to-run noise. The limit is the information in a ~22-word claim, not model size or tuning.
 - **ISOT: only max length clearly matters.** 0.987 at 128 words → 0.997 at 512. Gains flatten after
   256, and 1024 words costs ~3× the time for +0.001. Even 128 words beats TF-IDF (0.981).
-- **BiLSTM does not rely on web clutter:** `isot_nostyle` scores the same (0.997). This matches
-  Role A's TF-IDF result. ISOT is easy because real and fake articles differ in topic and writing
-  style in the body text itself.
+- **Removing web clutter doesn't change BiLSTM's score:** `isot_nostyle` scores the same (0.997), matching
+  Role A's TF-IDF result. The most likely explanation is that real and fake articles differ in topic and
+  writing style in the body text itself (not measured directly).
 - Start + end (0.999) and headlines (0.998) add a little. At this ceiling, 0.001 ≈ 4 of 3,823 articles.
 - Hidden size, dropout and trainable GloVe make no meaningful difference on ISOT.
 
 Charts for both phases: `notebooks/02_AR_sequential_sensitivity.ipynb` → `results/figures/seq_*.png`.
 
-### Conclusion (Phase 1 + 2, val)
+### Final settings (chosen on val, before test was run)
 
-**Does reading words in order help?** It depends on the type of text, and the dataset matters more
-than the model.
-
-1. **BiLSTM is the best sequential model** (best on 3 of 4 tasks).
-2. **Word order helps on social-media posts:** COVID 0.955 vs TF-IDF 0.924.
-3. **Word order does not help on short political claims:** LIAR stays at ~0.61–0.63, level with TF-IDF,
-   and no setting changes that. A ~22-word claim doesn't contain the evidence of whether it's true.
-   LIAR is the honest measure of how hard fake-news detection is.
-4. **ISOT's near-perfect score (0.997–0.999) reflects an easy dataset, not a clever model.** It is not
-   overfitting (val is unseen data) and not web clutter (`isot_nostyle` scores the same). Real and fake
-   articles come from different sources with different topics and writing styles, so the model can
-   separate them without checking facts, and may not transfer to other news sources.
-5. **Tuning barely matters; reading length does.** Hidden size, dropout and embeddings move scores by
-   ≤ ~0.01. Only max length on long articles clearly matters, and 512 words is the best score/time trade-off.
-
-**Limitations**
-- Val scores only; final test scores come once, in Phase 3.
-- LIAR differences of ~0.01 are within run-to-run noise (1,284 val claims, one seed).
-- LIAR-6 and COVID were not swept; they use the Phase 1 defaults.
-- No cross-dataset test, so how far the ISOT result transfers to other news sources is untested.
-
-### Planned final settings (Phase 3, chosen on val)
+For each task, the setting with the highest val score from Phases 1–2.
 
 | Task | Model | Settings |
 |---|---|---|
@@ -349,4 +341,70 @@ than the model.
 | LIAR-6 | BiLSTM | defaults (not swept; best in Phase 1, val acc 0.272) |
 | COVID | BiLSTM | defaults (not swept; best in Phase 1, val 0.955) |
 
-Test scores are not run yet. They come once, in the final runs.
+### Phase 3: final test results
+
+Each run: `--test --save`, test scored once. Baseline = Role A's TF-IDF + LR **test** scores.
+
+| Task | Metric | Val | **Test** | TF-IDF test | Difference | Plan target |
+|---|---|---|---|---|---|---|
+| ISOT | macro-F1 | 0.999 | **0.996** | 0.980 | +0.017 | ≥ 0.99 (R2d) met |
+| COVID | macro-F1 | 0.955 | **0.951** | 0.929 | +0.022 | ≥ 0.95 (R2a) met |
+| LIAR | macro-F1 | 0.628 | **0.595** | 0.592 | +0.003 | ≥ 0.63 (R2b) not met |
+| LIAR-6 | accuracy | 0.272 | **0.246** | 0.252 | −0.005 | ≥ 0.27 (R2c) not met |
+| LIAR-6 | macro-F1 | 0.269 | **0.240** | 0.219 | +0.021 | |
+
+Differences are computed before rounding. Plan targets are **team** targets ("best test" score across
+all model families), not per role.
+
+**Bootstrap check** (1,000 resamples of the test set, BiLSTM − TF-IDF):
+
+| Task | Difference | 95% range | BiLSTM ahead in |
+|---|---|---|---|
+| COVID macro-F1 | +0.022 | +0.011 to +0.033 | 100% |
+| ISOT macro-F1 | +0.017 | +0.012 to +0.021 | 100% |
+| LIAR macro-F1 | +0.003 | −0.026 to +0.033 | 55% |
+| LIAR-6 macro-F1 | +0.021 | −0.009 to +0.052 | 93% |
+| LIAR-6 accuracy | −0.005 | −0.036 to +0.026 | 35% |
+
+**LIAR-6 predictions** (test, 1,283 claims): TF-IDF predicts the common labels (half-true, false) most
+often and catches 3% of pants-fire claims; BiLSTM spreads its predictions across all 6 labels and catches
+26% of pants-fire claims. This is why its macro-F1 is higher while accuracy is slightly lower.
+
+**Val → test:** ISOT −0.003 and COVID −0.004. LIAR drops the most (0.628 → 0.595); dropout 0.5 was
+chosen on a small val margin. TF-IDF also drops on LIAR (0.619 → 0.592).
+
+**Checks**
+- Test was scored only by these 4 runs (all 34 other Role C runs are val-only).
+- Reloading each saved model on CPU reproduces the logged test scores exactly.
+- Exact text overlap between train and test: ISOT 0, LIAR 4 of 1,283, COVID 2 of 2,140 (from the
+  official splits).
+- `python -m scripts.collect_results` lists exactly these 4 runs as the `bilstm` row.
+
+### Conclusion
+
+**Best of LSTM / BiLSTM / GRU:** BiLSTM (best on 3 of 4 tasks).
+
+- **COVID and ISOT:** BiLSTM scores higher than TF-IDF (+0.022, +0.017), ahead in every bootstrap resample.
+- **LIAR:** +0.003; ahead in about half the resamples, so no difference can be claimed.
+- **LIAR-6:** accuracy −0.005, macro-F1 +0.021. BiLSTM predicts the rarer labels more often.
+- **Settings:** most changes moved val scores by ~0.01 or less. The number of words read changed the ISOT
+  score the most (0.987 at 128 words → 0.997 at 512).
+- **ISOT:** removing web clutter didn't change the score, and no test articles appear in train.
+- **Why BiLSTM scores higher on COVID and ISOT is not established.** It differs from TF-IDF in both word
+  order and GloVe word meanings. Role B's GloVe-averaged model (same vectors, no order) would separate the two.
+
+**Possible reasons LIAR shows no gain (theory, not tested here)**
+- The label depends on real-world facts that are not in the claim text.
+- Claims are ~18–22 words, so there is little sequence structure for an RNN to use.
+- The TF-IDF baseline already uses word pairs (`ngram_range=(1, 2)`), which capture short phrases.
+- ~10k training claims favour a simpler, lower-variance model (BiLSTM's best epoch was 1–4).
+- GloVe represents numbers and specific figures poorly, and many claims hinge on them.
+- LIAR-6 labels are ordered, but both models treat them as unrelated classes; neighbouring labels
+  (e.g. half-true vs mostly-true) are close calls even for fact-checkers.
+
+**Limitations**
+- One random seed.
+- BiLSTM was tuned a little; the TF-IDF baseline was not tuned.
+- LIAR-6 and COVID use default settings (not swept).
+- No cross-dataset test, so how far the ISOT result transfers to other news sources is untested.
+- Max length counts words, not BERT tokens; keep this in mind when comparing with Role E on ISOT.
