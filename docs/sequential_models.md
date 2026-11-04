@@ -104,7 +104,7 @@ Defaults = PROJECT_PLAN.md §5 (GloVe 100d, hidden 128, dropout 0.3, Adam 1e-3, 
 | PyTorch (CUDA build) | **C**, **F** (to load C's model) | See step 1 below. `requirements.txt` does not install it |
 | Processed data | **C** (and every role) | `python -m scripts.prepare_data`, see [`data/README.md`](../data/README.md) |
 | GloVe 6B 100d (~330 MB) | **C**, **B** (GloVe-avg features), D (optional) | See step 3 below. Git-ignored |
-| C's saved model `.pt` | **F** | Google Drive zip from C (see §3.4); checkpoints are git-ignored |
+| C's saved model `.pt` | **F** | Zip shared by C (see §3.4); checkpoints are git-ignored |
 
 1. **PyTorch with CUDA**:
    ```bash
@@ -211,7 +211,15 @@ Plus ~15 s per command to load GloVe. Actual totals: Phase 1 (12 runs) ~13 min, 
 from C. Checkpoints are git-ignored (`models/*`), so they are shared outside git. **No GloVe file
 needed**: the embeddings are stored inside the checkpoint.
 
-The model takes **raw strings** and does its own tokenising, so it plugs straight into LIME:
+**Setup**
+1. Get C's code. Before PR #3 is merged: `git fetch origin` then `git checkout feat/sequential-arshad`.
+   After it is merged: `git pull` on `main`.
+2. Install PyTorch if needed (CPU is fine): `pip install torch`.
+3. Unzip C's shared `sequential_models_<date>.zip` into the repo's `models/` folder, so you get
+   `models/sequential/isot/bilstm.pt`, `.../liar/bilstm.pt`, `.../liar6/bilstm.pt`, `.../covid/bilstm.pt`.
+
+**Usage.** The model takes **raw strings** and does its own tokenising (no preprocessing needed on
+your side), so it plugs straight into LIME:
 
 ```python
 from src.models.sequential import SequentialClassifier
@@ -232,8 +240,8 @@ exp = LimeTextExplainer(class_names=["real", "fake"]).explain_instance(text, mod
 - CPU speed per single input (final models): ISOT 19 ms, LIAR / LIAR-6 1.4 ms, COVID 2.9 ms, well under
   target R4 (< 1 s). LIME calls `predict_proba` on thousands of perturbed texts per explanation, so ISOT
   explanations take longer than single predictions.
-- Final models: `models/sequential/<isot|liar|liar6|covid>/bilstm.pt` (~32 MB total), shared as a zip
-  on Google Drive. Unzip into `models/` so the paths above work.
+- Final models: `models/sequential/<isot|liar|liar6|covid>/bilstm.pt` (~32 MB total, 29 MB zipped),
+  shared with Role F as a zip.
 
 ---
 
@@ -256,7 +264,7 @@ exp = LimeTextExplainer(class_names=["real", "fake"]).explain_instance(text, mod
   `python -m scripts.collect_results` picks up exactly the 4 final runs
 
 **Next (Role C)**
-- [ ] Share the 4 `.pt` files with Role F (Google Drive)
+- [x] Shared the 4 `.pt` files with Role F (zip)
 - [ ] Get PR #3 reviewed and merged (by Mon 9 Nov freeze)
 
 ### Phase 1 results (val)
