@@ -1,0 +1,17 @@
+{
+  "timestamp": "20261104-133605-575872",
+  "model": "tfidf-lr-sanity",
+  "train_dataset": "liar6",
+  "dataset": "liar6",
+  "split": "val",
+  "author": "Qi Heng",
+  "runtime_s": 2.01,
+  "params": {},
+  "notes": "",
+  "n": 1284,
+  "accuracy": 0.2601246105919003,
+  "precision_macro": 0.2861048440064214,
+  "recall_macro": 0.24008361732225839,
+  "f1_macro": 0.23782120212513855,
+  "f1_weighted": 0.2512994703125023
+}

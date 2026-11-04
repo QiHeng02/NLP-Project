@@ -24,6 +24,7 @@ accelerate>=0.33
 lime>=0.2.0.1
 shap>=0.45
 streamlit>=1.37
+ipykernel>=6.29
 
 # Dev
 pytest>=8.0

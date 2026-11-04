@@ -17,7 +17,7 @@ from src.config import ISOT_MIN_CHARS
 
 # "WASHINGTON (Reuters) - ", "SEOUL/BEIJING (Reuters) – ", or a bare "(Reuters) - "
 _REUTERS_DATELINE = re.compile(r"^\s*(?:[A-Z][\w.'’/,\- ]{0,80}?\s)?\(Reuters\)\s*[-–—]\s*")
-_REUTERS_TOKEN = re.compile(r"\breuters\b", flags=re.IGNORECASE)
+_REUTERS_TOKEN = re.compile(r"\S*reuters\S*", flags=re.IGNORECASE)
 # Optional: web-publishing residue that mostly appears in ISOT's fake class.
 _STYLE_MARKERS = re.compile(
     r"(featured image (via|by|credit)[^\n]*$)|(\bgetty images\b)|(\bscreenshot\b)",

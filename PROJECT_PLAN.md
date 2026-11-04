@@ -29,7 +29,7 @@ Targets are set from the sanity baseline (TF-IDF + LR) numbers and published res
 | **R2a** | COVID: best test macro-F1 | ≥ 0.95 | Sanity baseline 0.929 |
 | **R2b** | LIAR binary: best test macro-F1 | ≥ 0.63 | Sanity baseline 0.592 |
 | **R2c** | LIAR 6-class: best test accuracy | ≥ 0.27 | Sanity baseline 0.252; Wang (2017) ≈ 0.27 |
-| **R2d** | ISOT (cleaned): best test macro-F1 | Set on Wed 4 Nov after the ISOT baseline (expected ~0.98) | Leakage audit reports ~0.98 for LR after cleaning |
+| **R2d** | ISOT (cleaned): best test macro-F1 | ≥ 0.99 (halve the error rate) | Sanity baseline 0.980; raw/leaky 0.992; subject-only 1.000 |
 | **R3** | Data integrity | 0 duplicate texts across ISOT train/test; no metadata features; leakage table reported | Raw ISOT: subject column alone gives F1 = 1.0 |
 | **R4** | Efficiency | Demo prediction < 1 s per input on CPU; training time logged for every model | n/a |
 | **R5** | Interpretability | LIME/SHAP for the best classical and best transformer model on every dataset | n/a |

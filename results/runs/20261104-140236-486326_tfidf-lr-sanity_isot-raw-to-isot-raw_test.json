@@ -1,0 +1,18 @@
+{
+  "timestamp": "20261104-140236-486326",
+  "model": "tfidf-lr-sanity",
+  "train_dataset": "isot-raw",
+  "dataset": "isot-raw",
+  "split": "test",
+  "author": "Qi Heng",
+  "runtime_s": null,
+  "params": {},
+  "notes": "Leakage check: raw text, duplicates kept, naive 80/20 split",
+  "n": 8980,
+  "accuracy": 0.9919821826280624,
+  "precision_macro": 0.9919181714611958,
+  "recall_macro": 0.9920164687112778,
+  "f1_macro": 0.9919660825939791,
+  "f1_fake": 0.9923257301215093,
+  "roc_auc": 0.9996408131679702
+}
