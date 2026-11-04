@@ -13,6 +13,7 @@ def test_strips_reuters_dateline_variants():
     assert strip_source_markers("SEOUL/BEIJING (Reuters) – " + BODY).strip() == BODY
     assert strip_source_markers("(Reuters) - " + BODY).strip() == BODY
     assert "reuters" not in strip_source_markers("Officials told Reuters on Monday.").lower()
+    assert "reuters" not in strip_source_markers("Follow @ReutersPolitics and #ReutersPoll").lower()
 
 
 def _isot(rows):
