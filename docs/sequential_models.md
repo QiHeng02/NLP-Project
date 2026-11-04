@@ -9,6 +9,7 @@ use the same word vectors but ignore order, so B vs C isolates the effect of ord
 | [`src/models/sequential.py`](../src/models/sequential.py) | The model code (import it, don't run it) |
 | [`scripts/run_sequential.py`](../scripts/run_sequential.py) | The experiment runner (trains, scores, logs) |
 | [`scripts/run_sequential_sweep.py`](../scripts/run_sequential_sweep.py) | Phase 2: all 18 BiLSTM sensitivity + ISOT check runs in one command |
+| [`notebooks/02_AR_sequential_sensitivity.ipynb`](../notebooks/02_AR_sequential_sensitivity.ipynb) | Charts and tables for Phase 1 + 2 (reads `results/runs/`, no training). Saves `results/figures/seq_*.png` |
 
 ## Which roles need this
 
@@ -239,9 +240,10 @@ exp = LimeTextExplainer(class_names=["real", "fake"]).explain_instance(text, mod
 - [x] **Phase 1 complete:** 3 models × 4 tasks = 12 val runs, default settings (~13 min total)
 - [x] Added `--truncate head|head_tail`, the `isot_nostyle` / `isot_title` tasks, and `scripts/run_sequential_sweep.py`
 - [x] **Phase 2 runs complete:** 18 BiLSTM val runs (15 sensitivity + 3 ISOT checks)
+- [x] **Phase 2 plots:** `notebooks/02_AR_sequential_sensitivity.ipynb` → `results/figures/`:
+  `seq_phase1_models.png`, `seq_sens_max_len.png`, `seq_sens_settings.png`, `seq_isot_checks.png`
 
 **Next (Role C)**
-- [ ] Phase 2: sensitivity plots notebook
 - [ ] Phase 3: final test runs with the settings below, save best models and send `.pt` files to Role F, open PR (by Mon 9 Nov freeze)
 
 ### Phase 1 results (val)
@@ -312,6 +314,31 @@ Phase 1 BiLSTM result). Macro-F1. Run: `python -m scripts.run_sequential_sweep`.
   style in the body text itself.
 - Start + end (0.999) and headlines (0.998) add a little. At this ceiling, 0.001 ≈ 4 of 3,823 articles.
 - Hidden size, dropout and trainable GloVe make no meaningful difference on ISOT.
+
+Charts for both phases: `notebooks/02_AR_sequential_sensitivity.ipynb` → `results/figures/seq_*.png`.
+
+### Conclusion (Phase 1 + 2, val)
+
+**Does reading words in order help?** It depends on the type of text, and the dataset matters more
+than the model.
+
+1. **BiLSTM is the best sequential model** (best on 3 of 4 tasks).
+2. **Word order helps on social-media posts:** COVID 0.955 vs TF-IDF 0.924.
+3. **Word order does not help on short political claims:** LIAR stays at ~0.61–0.63, level with TF-IDF,
+   and no setting changes that. A ~22-word claim doesn't contain the evidence of whether it's true.
+   LIAR is the honest measure of how hard fake-news detection is.
+4. **ISOT's near-perfect score (0.997–0.999) reflects an easy dataset, not a clever model.** It is not
+   overfitting (val is unseen data) and not web clutter (`isot_nostyle` scores the same). Real and fake
+   articles come from different sources with different topics and writing styles, so the model can
+   separate them without checking facts, and may not transfer to other news sources.
+5. **Tuning barely matters; reading length does.** Hidden size, dropout and embeddings move scores by
+   ≤ ~0.01. Only max length on long articles clearly matters, and 512 words is the best score/time trade-off.
+
+**Limitations**
+- Val scores only; final test scores come once, in Phase 3.
+- LIAR differences of ~0.01 are within run-to-run noise (1,284 val claims, one seed).
+- LIAR-6 and COVID were not swept; they use the Phase 1 defaults.
+- No cross-dataset test, so how far the ISOT result transfers to other news sources is untested.
 
 ### Planned final settings (Phase 3, chosen on val)
 
