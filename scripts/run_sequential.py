@@ -8,6 +8,10 @@ Usage:
     python -m scripts.run_sequential                                   # all 3 models x 4 tasks
     python -m scripts.run_sequential --models bilstm --datasets isot --max-len 256 --notes "sens: max_len"
     python -m scripts.run_sequential --models bilstm --datasets liar --test --save   # final run
+    python -m scripts.run_sequential --models bilstm --datasets isot --truncate head_tail
+
+ISOT ablation variants (Role A, PR #2) need building once first:
+    python -m scripts.make_isot_ablation --variant nostyle      # then --datasets isot_nostyle
 """
 from __future__ import annotations
 
@@ -17,7 +21,7 @@ import time
 from src.config import DATA_PROCESSED, LABEL_FAKE, MODELS_DIR, SEED
 from src.data.loaders import load_splits
 from src.evaluation.metrics import compute_metrics, log_run
-from src.models.sequential import ARCHS, GLOVE_PATH, SequentialClassifier, load_glove
+from src.models.sequential import ARCHS, GLOVE_PATH, TRUNCATIONS, SequentialClassifier, load_glove
 
 # task tag -> (processed folder, label column, metric task, default max_len from the EDA token lengths)
 TASKS = {
@@ -25,7 +29,11 @@ TASKS = {
     "liar": ("liar", "label", "binary", 64),
     "liar6": ("liar", "label_6", "multiclass", 64),
     "covid": ("covid", "label", "binary", 128),
+    # ISOT ablations: same articles and splits, only the text changes (scripts/make_isot_ablation.py)
+    "isot_nostyle": ("isot_nostyle", "label", "binary", 512),
+    "isot_title": ("isot_title", "label", "binary", 512),
 }
+DEFAULT_TASKS = ["isot", "liar", "liar6", "covid"]  # ablations only run when asked for
 
 
 def _evaluate(model, X, y, *, task: str) -> dict:
@@ -38,15 +46,18 @@ def _evaluate(model, X, y, *, task: str) -> dict:
 def run(arch: str, tag: str, glove: dict, args: argparse.Namespace) -> None:
     folder, label_col, task, default_len = TASKS[tag]
     if not (DATA_PROCESSED / folder / "train.csv").exists():
-        print(f"[{tag}] skipped: run `python -m scripts.prepare_data` first")
+        hint = (f"python -m scripts.make_isot_ablation --variant {folder.split('_')[1]}"
+                if folder.startswith("isot_") else "python -m scripts.prepare_data")
+        print(f"[{tag}] skipped: run `{hint}` first")
         return
     splits = load_splits(folder)
     model = SequentialClassifier(
-        arch, glove=glove, max_len=args.max_len or default_len, hidden_size=args.hidden,
+        arch, glove=glove, max_len=args.max_len or default_len, truncation=args.truncate,
+        hidden_size=args.hidden,
         dropout=args.dropout, freeze_embeddings=not args.trainable_embeddings, lr=args.lr,
         batch_size=args.batch_size, max_epochs=args.epochs, patience=args.patience, seed=args.seed,
     )
-    print(f"\n[{arch} | {tag}] max_len={model.max_len} hidden={model.hidden_size} "
+    print(f"\n[{arch} | {tag}] max_len={model.max_len} ({model.truncation}) hidden={model.hidden_size} "
           f"dropout={model.dropout} frozen={model.freeze_embeddings} device={model.device}")
 
     t0 = time.perf_counter()
@@ -71,9 +82,11 @@ def run(arch: str, tag: str, glove: dict, args: argparse.Namespace) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--models", nargs="+", choices=ARCHS, default=list(ARCHS))
-    parser.add_argument("--datasets", nargs="+", choices=list(TASKS), default=list(TASKS))
+    parser.add_argument("--datasets", nargs="+", choices=list(TASKS), default=DEFAULT_TASKS)
     # hyperparameters (defaults = PROJECT_PLAN.md section 5)
     parser.add_argument("--max-len", type=int, default=None, help="default: per dataset, see TASKS")
+    parser.add_argument("--truncate", choices=TRUNCATIONS, default="head",
+                        help="long texts: keep the start (head) or start + end (head_tail)")
     parser.add_argument("--hidden", type=int, default=128)
     parser.add_argument("--dropout", type=float, default=0.3)
     parser.add_argument("--trainable-embeddings", action="store_true", help="fine-tune GloVe (default: frozen)")

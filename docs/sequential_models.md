@@ -8,6 +8,7 @@ use the same word vectors but ignore order, so B vs C isolates the effect of ord
 |---|---|
 | [`src/models/sequential.py`](../src/models/sequential.py) | The model code (import it, don't run it) |
 | [`scripts/run_sequential.py`](../scripts/run_sequential.py) | The experiment runner (trains, scores, logs) |
+| [`scripts/run_sequential_sweep.py`](../scripts/run_sequential_sweep.py) | Phase 2: all 18 BiLSTM sensitivity + ISOT check runs in one command |
 
 ## Which roles need this
 
@@ -59,16 +60,23 @@ val for early stopping → score → `log_run` to `results/runs/` → optionally
 | `liar` | liar | `label` | binary | 64 |
 | `liar6` | liar | `label_6` | 6-class | 64 |
 | `covid` | covid | `label` | binary | 128 |
+| `isot_nostyle` | isot_nostyle | `label` | binary | 512 |
+| `isot_title` | isot_title | `label` | binary | 512 |
 
 Max lengths come from Role A's token-length table in `notebooks/01_QH_eda.ipynb`.
+`isot_nostyle` (web clutter removed) and `isot_title` (headline added) are Role A's ISOT ablation
+variants from PR #2: same articles and splits, only the text changes. Build them once with
+`python -m scripts.make_isot_ablation --variant nostyle` / `--variant title`. They only run when named
+in `--datasets`.
 
 ### Command-line options
 
 | Option | Default | Notes |
 |---|---|---|
 | `--models` | `lstm bilstm gru` | any subset |
-| `--datasets` | `isot liar liar6 covid` | any subset |
+| `--datasets` | `isot liar liar6 covid` | any subset, plus `isot_nostyle` / `isot_title` |
 | `--max-len` | per dataset (table above) | words read per text |
+| `--truncate` | `head` | long texts: keep the first `max_len` words (`head`) or first half + last half (`head_tail`) |
 | `--hidden` | 128 | RNN memory size |
 | `--dropout` | 0.3 | |
 | `--trainable-embeddings` | off (GloVe frozen) | fine-tune GloVe |
@@ -121,10 +129,13 @@ No `gensim` needed: GloVe is read directly from the text file.
 python -m scripts.run_sequential --author "<name>"                          # 3 models × 4 tasks
 python -m scripts.run_sequential --models bilstm --datasets liar --author "<name>"
 
-# Phase 2: sensitivity, change ONE setting at a time
-python -m scripts.run_sequential --models bilstm --datasets liar isot --dropout 0.5 --notes "sens: dropout"
+# Phase 2: all 18 sensitivity + ISOT check runs (BiLSTM, val only, ~60–75 min)
+python -m scripts.run_sequential_sweep --author "<name>"
+python -m scripts.run_sequential_sweep --only dropout embeddings      # a subset
+python -m scripts.run_sequential_sweep --dry-run                      # list runs, train nothing
+
+# ...or a single sensitivity run by hand
 python -m scripts.run_sequential --models bilstm --datasets isot --max-len 256 --notes "sens: max_len"
-python -m scripts.run_sequential --models bilstm --datasets liar --trainable-embeddings --notes "sens: embeddings"
 
 # Final: chosen settings, score test once, save the model
 python -m scripts.run_sequential --models bilstm --datasets liar --test --save --author "<name>"
@@ -226,11 +237,12 @@ exp = LimeTextExplainer(class_names=["real", "fake"]).explain_instance(text, mod
 - [x] `src/models/sequential.py` and `scripts/run_sequential.py` written
 - [x] Smoke test (2 epochs, not real results): all 3 models train on GPU for LIAR and LIAR-6; save → load gives identical predictions; `predict_proba` handles raw and empty strings
 - [x] **Phase 1 complete:** 3 models × 4 tasks = 12 val runs, default settings (~13 min total)
+- [x] Added `--truncate head|head_tail`, the `isot_nostyle` / `isot_title` tasks, and `scripts/run_sequential_sweep.py`
+- [x] **Phase 2 runs complete:** 18 BiLSTM val runs (15 sensitivity + 3 ISOT checks)
 
 **Next (Role C)**
-- [ ] Phase 2: sensitivity runs (BiLSTM on LIAR + ISOT) + plots notebook
-- [ ] Phase 2 extras: BiLSTM on Role A's `isot_nostyle` variant (PR #2); head vs head+tail truncation on ISOT
-- [ ] Final test runs, save best models and send `.pt` files to Role F, open PR (by Mon 9 Nov freeze)
+- [ ] Phase 2: sensitivity plots notebook
+- [ ] Phase 3: final test runs with the settings below, save best models and send `.pt` files to Role F, open PR (by Mon 9 Nov freeze)
 
 ### Phase 1 results (val)
 
@@ -254,8 +266,60 @@ LIAR 64 / COVID 128. Runtime: ISOT 2.5–5.5 min per model, all others < 30 s.
   frozen-vs-trainable embeddings are tested in Phase 2.
 - **LIAR-6: small gain.** BiLSTM accuracy 0.272 meets target R2c (≥ 0.27); macro-F1 0.269 vs 0.238.
 - **ISOT: near-perfect (0.995–0.997), likely too easy.** Role A's PR #2 found TF-IDF does not depend on
-  web clutter (0.980 on `isot_nostyle`). Whether the RNNs do is still open; Phase 2 runs BiLSTM on
-  `isot_nostyle` to check.
+  web clutter (0.980 on `isot_nostyle`). Phase 2 checks the same for BiLSTM (it doesn't either; see below).
 - GloVe coverage of each vocabulary: LIAR 98%, ISOT 90%, COVID 89% (hashtags, URLs, slang).
+
+### Phase 2 results (val, BiLSTM)
+
+One setting changed at a time; everything else at the Phase 1 defaults. **Bold** = default (the
+Phase 1 BiLSTM result). Macro-F1. Run: `python -m scripts.run_sequential_sweep`.
+
+**LIAR** (default 0.613)
+
+| Setting | Values → val macro-F1 |
+|---|---|
+| Max length | 32 → 0.618 · **64 → 0.613** · 128 → 0.617 |
+| Hidden size | 64 → 0.611 · **128 → 0.613** · 256 → 0.613 |
+| Dropout | 0.1 → 0.616 · **0.3 → 0.613** · 0.5 → 0.628 |
+| GloVe | **frozen → 0.613** · trainable → 0.619 |
+
+**ISOT** (default 0.997)
+
+| Setting | Values → val macro-F1 | Runtime |
+|---|---|---|
+| Max length | 128 → 0.987 · 256 → 0.995 · **512 → 0.997** · 1024 → 0.998 | 1.3 / 4.8 / 5.4 / 15.2 min |
+| Hidden size | 64 → 0.996 · **128 → 0.997** · 256 → 0.996 | |
+| Dropout | 0.1 → 0.996 · **0.3 → 0.997** · 0.5 → 0.997 | |
+| GloVe | **frozen → 0.997** · trainable → 0.998 | |
+
+**ISOT checks** (default settings)
+
+| Variant | val macro-F1 | Tests |
+|---|---|---|
+| Default: start of article, body only | 0.997 | |
+| `isot_nostyle`: web clutter removed | 0.997 | Does BiLSTM rely on links / photo credits / embed code? |
+| `--truncate head_tail`: start + end | 0.999 | Does the end of the article add clues? |
+| `isot_title`: headline added | 0.998 | Do headlines add clues? |
+
+**Takeaways**
+- **LIAR is insensitive to every setting** (0.611–0.619), except dropout 0.5 (0.628, best epoch moved
+  from 1 to 4, so it overfits more slowly). Val has 1,284 claims, so differences of ~0.01 are within
+  run-to-run noise. The limit is the information in a ~22-word claim, not model size or tuning.
+- **ISOT: only max length clearly matters.** 0.987 at 128 words → 0.997 at 512. Gains flatten after
+  256, and 1024 words costs ~3× the time for +0.001. Even 128 words beats TF-IDF (0.981).
+- **BiLSTM does not rely on web clutter:** `isot_nostyle` scores the same (0.997). This matches
+  Role A's TF-IDF result. ISOT is easy because real and fake articles differ in topic and writing
+  style in the body text itself.
+- Start + end (0.999) and headlines (0.998) add a little. At this ceiling, 0.001 ≈ 4 of 3,823 articles.
+- Hidden size, dropout and trainable GloVe make no meaningful difference on ISOT.
+
+### Planned final settings (Phase 3, chosen on val)
+
+| Task | Model | Settings |
+|---|---|---|
+| ISOT | BiLSTM | defaults + `--truncate head_tail` (val 0.999) |
+| LIAR | BiLSTM | defaults + `--dropout 0.5` (val 0.628) |
+| LIAR-6 | BiLSTM | defaults (not swept; best in Phase 1, val acc 0.272) |
+| COVID | BiLSTM | defaults (not swept; best in Phase 1, val 0.955) |
 
 Test scores are not run yet. They come once, in the final runs.

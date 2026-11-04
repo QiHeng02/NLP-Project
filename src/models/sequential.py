@@ -27,6 +27,7 @@ from src.config import DATA_RAW, SEED
 
 GLOVE_PATH = DATA_RAW / "glove" / "glove.6B.100d.txt"
 ARCHS = ("lstm", "bilstm", "gru")
+TRUNCATIONS = ("head", "head_tail")  # keep the first max_len words, or first half + last half
 PAD, UNK = 0, 1  # reserved word ids: padding and unknown word
 
 # GloVe 6B is lower-cased with punctuation split off, so tokenise the same way
@@ -101,9 +102,9 @@ class RNNClassifier(nn.Module):
 class SequentialClassifier:
     """Shared-interface wrapper: handles tokenising, batching, training and early stopping."""
 
-    _PARAM_NAMES = ("arch", "embed_dim", "hidden_size", "dropout", "max_len", "freeze_embeddings",
-                    "lr", "batch_size", "max_epochs", "patience", "min_freq", "max_vocab",
-                    "grad_clip", "seed")
+    _PARAM_NAMES = ("arch", "embed_dim", "hidden_size", "dropout", "max_len", "truncation",
+                    "freeze_embeddings", "lr", "batch_size", "max_epochs", "patience", "min_freq",
+                    "max_vocab", "grad_clip", "seed")
 
     def __init__(
         self,
@@ -114,6 +115,7 @@ class SequentialClassifier:
         hidden_size: int = 128,
         dropout: float = 0.3,
         max_len: int = 128,
+        truncation: str = "head",
         freeze_embeddings: bool = True,
         lr: float = 1e-3,
         batch_size: int = 64,
@@ -128,8 +130,11 @@ class SequentialClassifier:
     ):
         if arch not in ARCHS:
             raise ValueError(f"arch must be one of {ARCHS}, got {arch!r}")
+        if truncation not in TRUNCATIONS:
+            raise ValueError(f"truncation must be one of {TRUNCATIONS}, got {truncation!r}")
         self.arch, self.glove, self.embed_dim, self.hidden_size = arch, glove, embed_dim, hidden_size
-        self.dropout, self.max_len, self.freeze_embeddings = dropout, max_len, freeze_embeddings
+        self.dropout, self.max_len, self.truncation = dropout, max_len, truncation
+        self.freeze_embeddings = freeze_embeddings
         self.lr, self.batch_size, self.max_epochs, self.patience = lr, batch_size, max_epochs, patience
         self.min_freq, self.max_vocab, self.grad_clip, self.seed = min_freq, max_vocab, grad_clip, seed
         self.device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
@@ -140,11 +145,19 @@ class SequentialClassifier:
         return {k: getattr(self, k) for k in self._PARAM_NAMES}
 
     # ------------------------------------------------------------ data
+    def _truncate(self, tokens: list[str]) -> list[str]:
+        if len(tokens) <= self.max_len:
+            return tokens
+        if self.truncation == "head_tail":  # start + end of long articles
+            head = self.max_len // 2
+            return tokens[:head] + tokens[-(self.max_len - head):]
+        return tokens[: self.max_len]
+
     def _encode(self, texts) -> list[list[int]]:
         """Text -> list of word ids, cut to max_len."""
         seqs = []
         for t in texts:
-            ids = [self.vocab_.get(tok, UNK) for tok in tokenize(t)[: self.max_len]]
+            ids = [self.vocab_.get(tok, UNK) for tok in self._truncate(tokenize(t))]
             seqs.append(ids or [UNK])  # empty text -> one unknown token
         return seqs
 
