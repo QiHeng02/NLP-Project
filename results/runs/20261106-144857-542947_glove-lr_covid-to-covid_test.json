@@ -1,0 +1,26 @@
+{
+  "timestamp": "20261106-144857-542947",
+  "model": "glove-lr",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "test",
+  "author": "Sharmayn",
+  "runtime_s": 0.33,
+  "params": {
+    "model": "lr",
+    "features": "glove",
+    "C": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "glove_coverage": 0.933,
+    "latency_ms_per_input": 0.09
+  },
+  "notes": "final: word-order comparison vs bilstm",
+  "n": 2140,
+  "accuracy": 0.8803738317757009,
+  "precision_macro": 0.8803798888951238,
+  "recall_macro": 0.8797619047619047,
+  "f1_macro": 0.8800213046281501,
+  "f1_fake": 0.8735177865612648,
+  "roc_auc": 0.9437228641456582
+}

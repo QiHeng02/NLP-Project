@@ -1,0 +1,25 @@
+{
+  "timestamp": "20261106-141405-129373",
+  "model": "glove-svm",
+  "train_dataset": "liar6",
+  "dataset": "liar6",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 3.86,
+  "params": {
+    "model": "svm",
+    "features": "glove",
+    "C": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "glove_coverage": 0.994,
+    "latency_ms_per_input": 0.04
+  },
+  "notes": "phase1: defaults",
+  "n": 1284,
+  "accuracy": 0.2507788161993769,
+  "precision_macro": 0.25179122938458137,
+  "recall_macro": 0.2271460845776703,
+  "f1_macro": 0.20947692173080676,
+  "f1_weighted": 0.22239411125306258
+}
