@@ -1,0 +1,30 @@
+{
+  "timestamp": "20261106-141343-729273",
+  "model": "tfidf-nb",
+  "train_dataset": "liar6",
+  "dataset": "liar6",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 0.7,
+  "params": {
+    "model": "nb",
+    "features": "tfidf",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 50000,
+    "min_df": 2,
+    "alpha": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "latency_ms_per_input": 0.059
+  },
+  "notes": "phase1: defaults",
+  "n": 1284,
+  "accuracy": 0.24299065420560748,
+  "precision_macro": 0.2037206338120078,
+  "recall_macro": 0.2108553924056278,
+  "f1_macro": 0.18137141167288898,
+  "f1_weighted": 0.2052224196048456
+}

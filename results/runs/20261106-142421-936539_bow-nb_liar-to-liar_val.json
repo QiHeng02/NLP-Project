@@ -1,0 +1,31 @@
+{
+  "timestamp": "20261106-142421-936539",
+  "model": "bow-nb",
+  "train_dataset": "liar",
+  "dataset": "liar",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 0.36,
+  "params": {
+    "model": "nb",
+    "features": "bow",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": null,
+    "min_df": 2,
+    "alpha": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "latency_ms_per_input": 0.058
+  },
+  "notes": "sens: max_features (max_features=None)",
+  "n": 1284,
+  "accuracy": 0.6292834890965732,
+  "precision_macro": 0.6286303995282323,
+  "recall_macro": 0.6272212069367757,
+  "f1_macro": 0.6271112813992479,
+  "f1_fake": 0.5986509274873525,
+  "roc_auc": 0.6635527646006687
+}

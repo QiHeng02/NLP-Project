@@ -1,0 +1,26 @@
+{
+  "timestamp": "20261106-141411-947665",
+  "model": "glove-svm",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 0.58,
+  "params": {
+    "model": "svm",
+    "features": "glove",
+    "C": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "glove_coverage": 0.933,
+    "latency_ms_per_input": 0.091
+  },
+  "notes": "phase1: defaults",
+  "n": 2140,
+  "accuracy": 0.874766355140187,
+  "precision_macro": 0.87545742434905,
+  "recall_macro": 0.8736169467787115,
+  "f1_macro": 0.8742280701754386,
+  "f1_fake": 0.866,
+  "roc_auc": 0.9480532212885154
+}

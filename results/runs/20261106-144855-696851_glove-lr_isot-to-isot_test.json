@@ -1,0 +1,26 @@
+{
+  "timestamp": "20261106-144855-696851",
+  "model": "glove-lr",
+  "train_dataset": "isot",
+  "dataset": "isot",
+  "split": "test",
+  "author": "Sharmayn",
+  "runtime_s": 20.01,
+  "params": {
+    "model": "lr",
+    "features": "glove",
+    "C": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "glove_coverage": 0.993,
+    "latency_ms_per_input": 0.766
+  },
+  "notes": "final: word-order comparison vs bilstm",
+  "n": 3823,
+  "accuracy": 0.9625948208213445,
+  "precision_macro": 0.9637473571323392,
+  "recall_macro": 0.9609374050742672,
+  "f1_macro": 0.9621509598528324,
+  "f1_fake": 0.958052214725726,
+  "roc_auc": 0.9920309329480522
+}
