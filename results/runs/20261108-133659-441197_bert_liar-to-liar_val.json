@@ -1,0 +1,58 @@
+{
+  "timestamp": "20261108-133659-441197",
+  "model": "bert",
+  "train_dataset": "liar",
+  "dataset": "liar",
+  "split": "val",
+  "author": "Menujaa",
+  "runtime_s": 135.58,
+  "params": {
+    "model_name": "bert",
+    "max_len": 64,
+    "truncation": "head",
+    "head_frac": 0.25,
+    "lr": 1e-05,
+    "batch_size": 16,
+    "eval_batch_size": 64,
+    "epochs": 3,
+    "patience": 2,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "grad_accum": 1,
+    "grad_clip": 1.0,
+    "fp16": true,
+    "seed": 42,
+    "hf_id": "bert-base-uncased",
+    "best_epoch": 2,
+    "epochs_run": 3,
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.6691,
+        "val_f1_macro": 0.6212,
+        "time_s": 47.6
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.622,
+        "val_f1_macro": 0.6287,
+        "time_s": 41.6
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.5654,
+        "val_f1_macro": 0.622,
+        "time_s": 41.6
+      }
+    ],
+    "truncated_share": 0.002
+  },
+  "notes": "sens: lr",
+  "n": 1284,
+  "accuracy": 0.6308411214953271,
+  "precision_macro": 0.6302078726227334,
+  "recall_macro": 0.6287813982424761,
+  "f1_macro": 0.6286780407210998,
+  "f1_fake": 0.6003372681281619,
+  "roc_auc": 0.6896580216190995
+}

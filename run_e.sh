@@ -10,8 +10,8 @@ mkdir -p $TMPDIR
 trap 'rm -rf $TMPDIR' EXIT
 export HF_HOME=$P/.tmp/hf HF_HUB_OFFLINE=1
 
-module load Miniforge3
-source activate $P/envs/nlp
+PY=$P/envs/nlp/bin/python
 cd $P/NLP-Project
-nvidia-smi
-python -m scripts.run_transformers --author "Menujaa" "$@"
+nvidia-smi --query-gpu=name,memory.total --format=csv
+$PY -c "import torch; print('torch', torch.__version__, '| GPU available:', torch.cuda.is_available())"
+$PY -m scripts.run_transformers --author "Menujaa" "$@"

@@ -1,0 +1,156 @@
+name, memory.total [MiB]
+NVIDIA A40, 49140 MiB
+torch 2.11.0+cu128 | GPU available: True
+
+[bert | isot] bert-base-uncased max_len=512 (head_tail) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 11910.88it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 30580 texts in 10.4s; 40% reach max_len=512
+      step 200  loss=0.3612
+      step 400  loss=0.2005
+      step 600  loss=0.1435
+      step 800  loss=0.1142
+      step 1000  loss=0.0940
+      step 1200  loss=0.0804
+      step 1400  loss=0.0723
+      step 1600  loss=0.0649
+      step 1800  loss=0.0595
+    epoch=1  train_loss=0.0564  val_f1_macro=0.9958  time_s=255.3
+      step 200  loss=0.0023
+      step 400  loss=0.0060
+      step 600  loss=0.0046
+      step 800  loss=0.0043
+      step 1000  loss=0.0046
+      step 1200  loss=0.0043
+      step 1400  loss=0.0051
+      step 1600  loss=0.0050
+      step 1800  loss=0.0047
+    epoch=2  train_loss=0.0045  val_f1_macro=0.9995  time_s=255.6
+      step 200  loss=0.0000
+      step 400  loss=0.0000
+      step 600  loss=0.0014
+      step 800  loss=0.0015
+      step 1000  loss=0.0012
+      step 1200  loss=0.0011
+      step 1400  loss=0.0014
+      step 1600  loss=0.0012
+      step 1800  loss=0.0013
+    epoch=3  train_loss=0.0012  val_f1_macro=0.9997  time_s=255.9
+[bert | isot] val  acc=1.000 f1_macro=1.000 (best epoch 3, 793s)
+
+[distilbert | isot] distilbert-base-uncased max_len=512 (head_tail) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 4598.82it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_projector.bias    | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_layer_norm.weight | UNEXPECTED | 
+classifier.weight       | MISSING    | 
+classifier.bias         | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+pre_classifier.weight   | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 30580 texts in 10.6s; 40% reach max_len=512
+      step 200  loss=0.4282
+      step 400  loss=0.2380
+      step 600  loss=0.1712
+      step 800  loss=0.1360
+      step 1000  loss=0.1119
+      step 1200  loss=0.0961
+      step 1400  loss=0.0847
+      step 1600  loss=0.0755
+      step 1800  loss=0.0691
+    epoch=1  train_loss=0.0656  val_f1_macro=0.9987  time_s=134.6
+      step 200  loss=0.0002
+      step 400  loss=0.0061
+      step 600  loss=0.0044
+      step 800  loss=0.0038
+      step 1000  loss=0.0033
+      step 1200  loss=0.0036
+      step 1400  loss=0.0046
+      step 1600  loss=0.0045
+      step 1800  loss=0.0047
+    epoch=2  train_loss=0.0045  val_f1_macro=0.9989  time_s=134.2
+      step 200  loss=0.0000
+      step 400  loss=0.0001
+      step 600  loss=0.0001
+      step 800  loss=0.0012
+      step 1000  loss=0.0009
+      step 1200  loss=0.0008
+      step 1400  loss=0.0007
+      step 1600  loss=0.0006
+      step 1800  loss=0.0005
+    epoch=3  train_loss=0.0005  val_f1_macro=0.9992  time_s=133.3
+[distilbert | isot] val  acc=0.999 f1_macro=0.999 (best epoch 3, 414s)
+
+[roberta | isot] roberta-base max_len=512 (head_tail) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 4319.39it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+lm_head.dense.weight       | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+classifier.dense.bias      | MISSING    | 
+classifier.dense.weight    | MISSING    | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 30580 texts in 8.8s; 39% reach max_len=512
+      step 200  loss=0.3699
+      step 400  loss=0.1900
+      step 600  loss=0.1298
+      step 800  loss=0.0995
+      step 1000  loss=0.0814
+      step 1200  loss=0.0705
+      step 1400  loss=0.0606
+      step 1600  loss=0.0544
+      step 1800  loss=0.0487
+    epoch=1  train_loss=0.0465  val_f1_macro=0.9984  time_s=260.4
+      step 200  loss=0.0037
+      step 400  loss=0.0066
+      step 600  loss=0.0048
+      step 800  loss=0.0048
+      step 1000  loss=0.0042
+      step 1200  loss=0.0035
+      step 1400  loss=0.0030
+      step 1600  loss=0.0030
+      step 1800  loss=0.0027
+    epoch=2  train_loss=0.0025  val_f1_macro=0.9997  time_s=262.0
+      step 200  loss=0.0000
+      step 400  loss=0.0000
+      step 600  loss=0.0000
+      step 800  loss=0.0000
+      step 1000  loss=0.0006
+      step 1200  loss=0.0006
+      step 1400  loss=0.0005
+      step 1600  loss=0.0004
+      step 1800  loss=0.0004
+    epoch=3  train_loss=0.0003  val_f1_macro=0.9997  time_s=261.3
+[roberta | isot] val  acc=1.000 f1_macro=1.000 (best epoch 2, 795s)

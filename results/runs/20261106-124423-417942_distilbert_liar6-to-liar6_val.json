@@ -1,0 +1,57 @@
+{
+  "timestamp": "20261106-124423-417942",
+  "model": "distilbert",
+  "train_dataset": "liar6",
+  "dataset": "liar6",
+  "split": "val",
+  "author": "Menujaa",
+  "runtime_s": 54.42,
+  "params": {
+    "model_name": "distilbert",
+    "max_len": 64,
+    "truncation": "head",
+    "head_frac": 0.25,
+    "lr": 2e-05,
+    "batch_size": 16,
+    "eval_batch_size": 64,
+    "epochs": 3,
+    "patience": 2,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "grad_accum": 1,
+    "grad_clip": 1.0,
+    "fp16": true,
+    "seed": 42,
+    "hf_id": "distilbert-base-uncased",
+    "best_epoch": 2,
+    "epochs_run": 3,
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 1.732,
+        "val_f1_macro": 0.2213,
+        "time_s": 17.5
+      },
+      {
+        "epoch": 2,
+        "train_loss": 1.63,
+        "val_f1_macro": 0.2708,
+        "time_s": 17.6
+      },
+      {
+        "epoch": 3,
+        "train_loss": 1.504,
+        "val_f1_macro": 0.2558,
+        "time_s": 17.6
+      }
+    ],
+    "truncated_share": 0.002
+  },
+  "notes": "",
+  "n": 1284,
+  "accuracy": 0.26869158878504673,
+  "precision_macro": 0.27631199440617515,
+  "recall_macro": 0.2743035817126652,
+  "f1_macro": 0.27079741407852614,
+  "f1_weighted": 0.26627716983901667
+}

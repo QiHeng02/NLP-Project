@@ -1,0 +1,201 @@
+name, memory.total [MiB]
+NVIDIA A40, 46068 MiB
+torch 2.11.0+cu128 | GPU available: True
+
+[bert | liar] bert-base-uncased max_len=64 (head) lr=3e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 8353.43it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.4s; 0% reach max_len=64
+      step 200  loss=0.6800
+      step 400  loss=0.6795
+      step 600  loss=0.6772
+    epoch=1  train_loss=0.6762  val_f1_macro=0.5009  time_s=42.4
+      step 200  loss=0.6332
+      step 400  loss=0.6283
+      step 600  loss=0.6269
+    epoch=2  train_loss=0.6256  val_f1_macro=0.6205  time_s=41.2
+      step 200  loss=0.5074
+      step 400  loss=0.5058
+      step 600  loss=0.4985
+    epoch=3  train_loss=0.497  val_f1_macro=0.6433  time_s=41.2
+[bert | liar] val  acc=0.651 f1_macro=0.643 (best epoch 3, 129s)
+
+[distilbert | liar] distilbert-base-uncased max_len=64 (head) lr=3e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 9107.56it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_projector.bias    | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.weight | UNEXPECTED | 
+pre_classifier.weight   | MISSING    | 
+classifier.weight       | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+classifier.bias         | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.5s; 0% reach max_len=64
+      step 200  loss=0.6749
+      step 400  loss=0.6666
+      step 600  loss=0.6645
+    epoch=1  train_loss=0.6629  val_f1_macro=0.5992  time_s=25.5
+      step 200  loss=0.5933
+      step 400  loss=0.5881
+      step 600  loss=0.5837
+    epoch=2  train_loss=0.5815  val_f1_macro=0.6152  time_s=25.4
+      step 200  loss=0.4235
+      step 400  loss=0.4341
+      step 600  loss=0.4259
+    epoch=3  train_loss=0.4225  val_f1_macro=0.6158  time_s=25.5
+[distilbert | liar] val  acc=0.622 f1_macro=0.616 (best epoch 3, 77s)
+
+[roberta | liar] roberta-base max_len=64 (head) lr=3e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 7651.64it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+lm_head.dense.weight       | UNEXPECTED | 
+classifier.dense.weight    | MISSING    | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.dense.bias      | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.4s; 0% reach max_len=64
+      step 200  loss=0.6803
+      step 400  loss=0.6779
+      step 600  loss=0.6765
+    epoch=1  train_loss=0.6756  val_f1_macro=0.5894  time_s=43.6
+      step 200  loss=0.6568
+      step 400  loss=0.6521
+      step 600  loss=0.6485
+    epoch=2  train_loss=0.6473  val_f1_macro=0.623  time_s=43.0
+      step 200  loss=0.6068
+      step 400  loss=0.6080
+      step 600  loss=0.6057
+    epoch=3  train_loss=0.6052  val_f1_macro=0.6362  time_s=43.0
+[roberta | liar] val  acc=0.641 f1_macro=0.636 (best epoch 3, 131s)
+
+[bert | liar6] bert-base-uncased max_len=64 (head) lr=3e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 8164.59it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.5s; 0% reach max_len=64
+      step 200  loss=1.7849
+      step 400  loss=1.7611
+      step 600  loss=1.7476
+    epoch=1  train_loss=1.7444  val_f1_macro=0.2267  time_s=46.6
+      step 200  loss=1.6441
+      step 400  loss=1.6302
+      step 600  loss=1.6222
+    epoch=2  train_loss=1.619  val_f1_macro=0.2634  time_s=41.2
+      step 200  loss=1.3986
+      step 400  loss=1.3786
+      step 600  loss=1.3660
+    epoch=3  train_loss=1.3635  val_f1_macro=0.2633  time_s=41.2
+[bert | liar6] val  acc=0.266 f1_macro=0.263 (best epoch 2, 130s)
+
+[distilbert | liar6] distilbert-base-uncased max_len=64 (head) lr=3e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 8333.94it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_projector.bias    | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.weight | UNEXPECTED | 
+pre_classifier.weight   | MISSING    | 
+classifier.weight       | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+classifier.bias         | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.4s; 0% reach max_len=64
+      step 200  loss=1.7597
+      step 400  loss=1.7423
+      step 600  loss=1.7317
+    epoch=1  train_loss=1.7287  val_f1_macro=0.2146  time_s=25.5
+      step 200  loss=1.6209
+      step 400  loss=1.6122
+      step 600  loss=1.6064
+    epoch=2  train_loss=1.6037  val_f1_macro=0.2658  time_s=25.4
+      step 200  loss=1.4165
+      step 400  loss=1.4120
+      step 600  loss=1.4008
+    epoch=3  train_loss=1.3992  val_f1_macro=0.2563  time_s=25.4
+[distilbert | liar6] val  acc=0.262 f1_macro=0.266 (best epoch 2, 77s)
+
+[roberta | liar6] roberta-base max_len=64 (head) lr=3e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 8347.34it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+lm_head.dense.weight       | UNEXPECTED | 
+classifier.dense.weight    | MISSING    | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.dense.bias      | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.5s; 0% reach max_len=64
+      step 200  loss=1.7725
+      step 400  loss=1.7644
+      step 600  loss=1.7586
+    epoch=1  train_loss=1.7576  val_f1_macro=0.1349  time_s=43.0
+      step 200  loss=1.7263
+      step 400  loss=1.7182
+      step 600  loss=1.7161
+    epoch=2  train_loss=1.7157  val_f1_macro=0.1799  time_s=43.0
+      step 200  loss=1.6650
+      step 400  loss=1.6637
+      step 600  loss=1.6624
+    epoch=3  train_loss=1.6614  val_f1_macro=0.2327  time_s=43.0
+[roberta | liar6] val  acc=0.262 f1_macro=0.233 (best epoch 3, 130s)
