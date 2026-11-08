@@ -1,0 +1,18 @@
+{
+  "timestamp": "20261108-150004-529543",
+  "model": "tfidf-lr-sanity",
+  "train_dataset": "isot",
+  "dataset": "liar",
+  "split": "test",
+  "author": "Qi Heng",
+  "runtime_s": 23.38,
+  "params": {},
+  "notes": "cross-dataset: default settings, no tuning",
+  "n": 1283,
+  "accuracy": 0.5027279812938426,
+  "precision_macro": 0.5356716774039608,
+  "recall_macro": 0.5303281446369726,
+  "f1_macro": 0.4933009958748694,
+  "f1_fake": 0.5624142661179699,
+  "roc_auc": 0.5450481430536451
+}
