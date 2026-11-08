@@ -1,0 +1,26 @@
+{
+  "timestamp": "20261106-142319-500421",
+  "model": "glove-svm",
+  "train_dataset": "isot",
+  "dataset": "isot",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 12.7,
+  "params": {
+    "model": "svm",
+    "features": "glove",
+    "C": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "glove_coverage": 0.993,
+    "latency_ms_per_input": 0.733
+  },
+  "notes": "phase1: defaults",
+  "n": 3823,
+  "accuracy": 0.9654721422966257,
+  "precision_macro": 0.9664265113683994,
+  "recall_macro": 0.9640150699260919,
+  "f1_macro": 0.9650763200292325,
+  "f1_fake": 0.9613583138173302,
+  "roc_auc": 0.9924070459608997
+}

@@ -1,0 +1,91 @@
+dataset,model,side,word,weight
+isot,tfidf-svm,fake,via,5.918849447308293
+isot,tfidf-svm,fake,read more,3.6426973639818097
+isot,tfidf-svm,fake,read,2.750064090409692
+isot,tfidf-svm,fake,president trump,2.3975063909212473
+isot,tfidf-svm,fake,featured image,2.1534598515633596
+isot,tfidf-svm,fake,the us,2.142262883895158
+isot,tfidf-svm,fake,image,2.0869761250957857
+isot,tfidf-svm,fake,sen,2.0685266652896246
+isot,tfidf-svm,fake,this,2.067336300054428
+isot,tfidf-svm,fake,featured,2.056153344130171
+isot,tfidf-svm,fake,mr,2.0152122411837694
+isot,tfidf-svm,fake,gop,1.9874462459044124
+isot,tfidf-svm,fake,obama,1.9569401502812382
+isot,tfidf-svm,fake,just,1.91793211455259
+isot,tfidf-svm,fake,com,1.8654612721901611
+isot,tfidf-svm,real,said,-5.085216167485124
+isot,tfidf-svm,real,said on,-3.4308674889231887
+isot,tfidf-svm,real,on tuesday,-2.843184374240316
+isot,tfidf-svm,real,president donald,-2.751836241892244
+isot,tfidf-svm,real,on,-2.7488681827128865
+isot,tfidf-svm,real,on thursday,-2.503976348718611
+isot,tfidf-svm,real,on wednesday,-2.4954083676936194
+isot,tfidf-svm,real,on friday,-2.4290366565783192
+isot,tfidf-svm,real,said in,-2.149145108343895
+isot,tfidf-svm,real,on monday,-2.0989742297851373
+isot,tfidf-svm,real,republican,-1.70035130055326
+isot,tfidf-svm,real,nov,-1.5610534200240271
+isot,tfidf-svm,real,tuesday,-1.4609964538609532
+isot,tfidf-svm,real,he said,-1.4322835301267836
+isot,tfidf-svm,real,on sunday,-1.406247229607201
+liar,bow-nb,fake,deciding,2.9836782311837187
+liar,bow-nb,fake,the deciding,2.914685359696767
+liar,bow-nb,fake,deciding vote,2.8405773875430445
+liar,bow-nb,fake,government takeover,2.760534679869508
+liar,bow-nb,fake,cabinet,2.472852607417728
+liar,bow-nb,fake,cast the,2.472852607417728
+liar,bow-nb,fake,number are,2.472852607417728
+liar,bow-nb,fake,terry,2.472852607417728
+liar,bow-nb,fake,terry mcauliffe,2.472852607417728
+liar,bow-nb,fake,are socialist,2.3550695717613443
+liar,bow-nb,fake,betty,2.3550695717613443
+liar,bow-nb,fake,corruption,2.3550695717613443
+liar,bow-nb,fake,did nothing,2.3550695717613443
+liar,bow-nb,fake,his friend,2.3550695717613443
+liar,bow-nb,fake,law will,2.3550695717613443
+liar,bow-nb,real,accident,-2.557585313974709
+liar,bow-nb,real,per student,-2.3634292995337507
+liar,bow-nb,real,remain,-2.289321327380028
+liar,bow-nb,real,share of,-2.289321327380028
+liar,bow-nb,real,while the,-2.289321327380028
+liar,bow-nb,real,incarceration,-2.2092786197064918
+liar,bow-nb,real,jersey ha,-2.2092786197064918
+liar,bow-nb,real,highest corporate,-2.1222672427168625
+liar,bow-nb,real,new private,-2.1222672427168625
+liar,bow-nb,real,rate among,-2.1222672427168625
+liar,bow-nb,real,twenty,-2.1222672427168625
+liar,bow-nb,real,72,-2.026957062912537
+liar,bow-nb,real,enough to,-2.026957062912537
+liar,bow-nb,real,federal spending,-2.026957062912537
+liar,bow-nb,real,grown by,-2.026957062912537
+covid,tfidf-svm,fake,coronavirus,3.261098938643089
+covid,tfidf-svm,fake,news,2.310653711271181
+covid,tfidf-svm,fake,corona,1.9679072880839488
+covid,tfidf-svm,fake,trump,1.9085267398069645
+covid,tfidf-svm,fake,covid 19,1.4352161660672114
+covid,tfidf-svm,fake,claim,1.3784135073651818
+covid,tfidf-svm,fake,19,1.3545838850364094
+covid,tfidf-svm,fake,coronavirusfacts,1.2900605331365227
+covid,tfidf-svm,fake,pandemic,1.1917502510195213
+covid,tfidf-svm,fake,lockdown,1.1907823542436144
+covid,tfidf-svm,fake,coronavirus covid19,1.1824240179505061
+covid,tfidf-svm,fake,president,1.1695215693411465
+covid,tfidf-svm,fake,fact,1.1401058090412923
+covid,tfidf-svm,fake,virus,1.0869702548286881
+covid,tfidf-svm,fake,man,1.0722351237878998
+covid,tfidf-svm,real,http,-4.421971004951603
+covid,tfidf-svm,real,rt,-3.15840319422678
+covid,tfidf-svm,real,drtedros,-1.9188843662371327
+covid,tfidf-svm,real,alexismadrigal,-1.8154447513805871
+covid,tfidf-svm,real,covid19,-1.773723727512791
+covid,tfidf-svm,real,case,-1.6517650813791585
+covid,tfidf-svm,real,number,-1.5849151503483243
+covid,tfidf-svm,real,amp,-1.5770118709718737
+covid,tfidf-svm,real,state,-1.5412300066124835
+covid,tfidf-svm,real,data,-1.4960420174944709
+covid,tfidf-svm,real,restriction,-1.3828507902951006
+covid,tfidf-svm,real,testing,-1.3641774118450491
+covid,tfidf-svm,real,learn,-1.266653663522071
+covid,tfidf-svm,real,indiafightscorona,-1.253511198763272
+covid,tfidf-svm,real,total,-1.2472133320906378

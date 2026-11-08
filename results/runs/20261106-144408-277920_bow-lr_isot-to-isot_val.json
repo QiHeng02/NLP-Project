@@ -1,0 +1,31 @@
+{
+  "timestamp": "20261106-144408-277920",
+  "model": "bow-lr",
+  "train_dataset": "isot",
+  "dataset": "isot",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 33.33,
+  "params": {
+    "model": "lr",
+    "features": "bow",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 50000,
+    "min_df": 2,
+    "C": 1.0,
+    "stopwords": true,
+    "lemmatize": true,
+    "latency_ms_per_input": 1.086
+  },
+  "notes": "sens: prep (stopwords=True, lemmatize=True)",
+  "n": 3823,
+  "accuracy": 0.9809050483913158,
+  "precision_macro": 0.9810551406236606,
+  "recall_macro": 0.980409261769134,
+  "f1_macro": 0.9807205342727443,
+  "f1_fake": 0.978834444766599,
+  "roc_auc": 0.9955432541010678
+}

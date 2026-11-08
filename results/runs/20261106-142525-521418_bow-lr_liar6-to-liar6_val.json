@@ -1,0 +1,30 @@
+{
+  "timestamp": "20261106-142525-521418",
+  "model": "bow-lr",
+  "train_dataset": "liar6",
+  "dataset": "liar6",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 7.78,
+  "params": {
+    "model": "lr",
+    "features": "bow",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 50000,
+    "min_df": 2,
+    "C": 10.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "latency_ms_per_input": 0.053
+  },
+  "notes": "sens: C (C=10.0)",
+  "n": 1284,
+  "accuracy": 0.24532710280373832,
+  "precision_macro": 0.2487034777100545,
+  "recall_macro": 0.2443027914280198,
+  "f1_macro": 0.24563960637253657,
+  "f1_weighted": 0.24490156758344822
+}

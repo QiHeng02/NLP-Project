@@ -1,0 +1,31 @@
+{
+  "timestamp": "20261106-143028-680672",
+  "model": "tfidf-svm",
+  "train_dataset": "isot",
+  "dataset": "isot",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 31.74,
+  "params": {
+    "model": "svm",
+    "features": "tfidf",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": null,
+    "min_df": 2,
+    "C": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "latency_ms_per_input": 1.506
+  },
+  "notes": "sens: max_features (max_features=None)",
+  "n": 3823,
+  "accuracy": 0.9903217368558723,
+  "precision_macro": 0.9906817091611049,
+  "recall_macro": 0.9898109824999752,
+  "f1_macro": 0.9902261850019123,
+  "f1_fake": 0.9892597968069666,
+  "roc_auc": 0.9989453923670598
+}

@@ -1,0 +1,31 @@
+{
+  "timestamp": "20261106-141410-551259",
+  "model": "bow-svm",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 1.1,
+  "params": {
+    "model": "svm",
+    "features": "bow",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 50000,
+    "min_df": 2,
+    "C": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "latency_ms_per_input": 0.09
+  },
+  "notes": "phase1: defaults",
+  "n": 2140,
+  "accuracy": 0.9373831775700935,
+  "precision_macro": 0.9371616253880262,
+  "recall_macro": 0.9373774509803922,
+  "f1_macro": 0.9372621294820734,
+  "f1_fake": 0.9345063538611925,
+  "roc_auc": 0.9857764355742298
+}

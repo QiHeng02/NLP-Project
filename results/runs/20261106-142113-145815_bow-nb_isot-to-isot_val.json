@@ -1,0 +1,31 @@
+{
+  "timestamp": "20261106-142113-145815",
+  "model": "bow-nb",
+  "train_dataset": "isot",
+  "dataset": "isot",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 34.3,
+  "params": {
+    "model": "nb",
+    "features": "bow",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 50000,
+    "min_df": 2,
+    "alpha": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "latency_ms_per_input": 1.294
+  },
+  "notes": "phase1: defaults",
+  "n": 3823,
+  "accuracy": 0.9547475804342139,
+  "precision_macro": 0.9545799743445134,
+  "recall_macro": 0.954066300826344,
+  "f1_macro": 0.95431501604793,
+  "f1_fake": 0.9498696030136192,
+  "roc_auc": 0.9785641816697651
+}

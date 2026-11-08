@@ -1,0 +1,31 @@
+{
+  "timestamp": "20261106-142627-076215",
+  "model": "tfidf-svm",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "val",
+  "author": "Sharmayn",
+  "runtime_s": 0.72,
+  "params": {
+    "model": "svm",
+    "features": "tfidf",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 50000,
+    "min_df": 2,
+    "C": 1.0,
+    "stopwords": true,
+    "lemmatize": false,
+    "latency_ms_per_input": 0.112
+  },
+  "notes": "sens: prep (stopwords=True)",
+  "n": 2140,
+  "accuracy": 0.9425233644859813,
+  "precision_macro": 0.9426299467480561,
+  "recall_macro": 0.942156862745098,
+  "f1_macro": 0.9423683116358776,
+  "f1_fake": 0.9393790044356826,
+  "roc_auc": 0.9864075630252102
+}

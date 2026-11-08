@@ -1,0 +1,26 @@
+{
+  "timestamp": "20261106-144856-243776",
+  "model": "glove-lr",
+  "train_dataset": "liar",
+  "dataset": "liar",
+  "split": "test",
+  "author": "Sharmayn",
+  "runtime_s": 0.35,
+  "params": {
+    "model": "lr",
+    "features": "glove",
+    "C": 1.0,
+    "stopwords": false,
+    "lemmatize": false,
+    "glove_coverage": 0.994,
+    "latency_ms_per_input": 0.064
+  },
+  "notes": "final: word-order comparison vs bilstm",
+  "n": 1283,
+  "accuracy": 0.6157443491816056,
+  "precision_macro": 0.605699632116722,
+  "recall_macro": 0.591978961535036,
+  "f1_macro": 0.5885222962173161,
+  "f1_fake": 0.4826862539349423,
+  "roc_auc": 0.641225396574075
+}
