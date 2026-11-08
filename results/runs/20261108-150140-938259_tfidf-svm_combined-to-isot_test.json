@@ -1,0 +1,18 @@
+{
+  "timestamp": "20261108-150140-938259",
+  "model": "tfidf-svm",
+  "train_dataset": "combined",
+  "dataset": "isot",
+  "split": "test",
+  "author": "Qi Heng",
+  "runtime_s": 25.1,
+  "params": {},
+  "notes": "cross-dataset: default settings, no tuning",
+  "n": 3823,
+  "accuracy": 0.9772430028773215,
+  "precision_macro": 0.9776881561146549,
+  "recall_macro": 0.976415201151425,
+  "f1_macro": 0.977008617180318,
+  "f1_fake": 0.9746872272330521,
+  "roc_auc": 0.9962095982273533
+}

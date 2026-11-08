@@ -1,0 +1,18 @@
+{
+  "timestamp": "20261108-150112-530431",
+  "model": "tfidf-svm",
+  "train_dataset": "covid",
+  "dataset": "isot",
+  "split": "test",
+  "author": "Qi Heng",
+  "runtime_s": 0.55,
+  "params": {},
+  "notes": "cross-dataset: default settings, no tuning",
+  "n": 3823,
+  "accuracy": 0.52184148574418,
+  "precision_macro": 0.5757662298564129,
+  "recall_macro": 0.5500382188259751,
+  "f1_macro": 0.4908638154520446,
+  "f1_fake": 0.6164498531263114,
+  "roc_auc": 0.600838052695587
+}

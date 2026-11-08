@@ -1,0 +1,18 @@
+{
+  "timestamp": "20261108-150007-897150",
+  "model": "tfidf-lr-sanity",
+  "train_dataset": "liar",
+  "dataset": "covid",
+  "split": "test",
+  "author": "Qi Heng",
+  "runtime_s": 0.41,
+  "params": {},
+  "notes": "cross-dataset: default settings, no tuning",
+  "n": 2140,
+  "accuracy": 0.6163551401869158,
+  "precision_macro": 0.6455966474440067,
+  "recall_macro": 0.6040703781512605,
+  "f1_macro": 0.580829737340423,
+  "f1_fake": 0.45880026367831245,
+  "roc_auc": 0.6912482492997198
+}
