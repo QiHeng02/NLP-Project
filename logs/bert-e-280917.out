@@ -1,0 +1,77 @@
+name, memory.total [MiB]
+NVIDIA A40, 49140 MiB
+torch 2.11.0+cu128 | GPU available: True
+
+[roberta | liar] roberta-base max_len=64 (head) lr=1e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights:   5%|▍         | 9/197 [00:00<00:02, 75.49it/s]Loading weights:  22%|██▏       | 44/197 [00:00<00:00, 180.31it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 543.15it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.dense.weight       | UNEXPECTED | 
+classifier.dense.bias      | MISSING    | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.dense.weight    | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.4s; 0% reach max_len=64
+      step 200  loss=0.6867
+      step 400  loss=0.6758
+      step 600  loss=0.6716
+    epoch=1  train_loss=0.6705  val_f1_macro=0.601  time_s=34.0
+      step 200  loss=0.6327
+      step 400  loss=0.6289
+      step 600  loss=0.6279
+    epoch=2  train_loss=0.6279  val_f1_macro=0.6535  time_s=31.8
+      step 200  loss=0.5722
+      step 400  loss=0.5759
+      step 600  loss=0.5790
+    epoch=3  train_loss=0.5788  val_f1_macro=0.6497  time_s=32.3
+[roberta | liar] CPU latency: 30.8 ms per input
+[roberta | liar] val  acc=0.661 f1_macro=0.654 (best epoch 2, 105s)
+[roberta | liar] test acc=0.658 f1_macro=0.639 (best epoch 2, 105s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.44it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.44it/s]
+[roberta | liar] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/liar/roberta
+
+[roberta | liar6] roberta-base max_len=64 (head) lr=1e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 4418.31it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.dense.weight       | UNEXPECTED | 
+classifier.dense.bias      | MISSING    | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.dense.weight    | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.4s; 0% reach max_len=64
+      step 200  loss=1.7796
+      step 400  loss=1.7623
+      step 600  loss=1.7515
+    epoch=1  train_loss=1.7493  val_f1_macro=0.2198  time_s=32.5
+      step 200  loss=1.6883
+      step 400  loss=1.6824
+      step 600  loss=1.6787
+    epoch=2  train_loss=1.6765  val_f1_macro=0.2643  time_s=31.8
+      step 200  loss=1.6083
+      step 400  loss=1.6062
+      step 600  loss=1.6035
+    epoch=3  train_loss=1.6029  val_f1_macro=0.2691  time_s=32.1
+[roberta | liar6] CPU latency: 30.2 ms per input
+[roberta | liar6] val  acc=0.284 f1_macro=0.269 (best epoch 3, 98s)
+[roberta | liar6] test acc=0.298 f1_macro=0.280 (best epoch 3, 98s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.13it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.13it/s]
+[roberta | liar6] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/liar6/roberta

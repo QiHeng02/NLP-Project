@@ -116,7 +116,7 @@ def _dot_panel(ax, labels_vals_colors, refs, task, split):
     lo, hi = min(vals + ref_vals), max(vals + ref_vals)
     # at least 0.02 wide, so a 0.001 gap does not look like a big difference
     half = max(0.7 * (hi - lo), 0.01)
-    centre = min((lo + hi) / 2, 1.0 - 0.6 * half)  # keep scores near 1.0 inside the axis
+    centre = min((lo + hi) / 2, 1.0 - 0.85 * half)  # keep scores near 1.0 inside the axis
     ax.set_xlim(centre - half, centre + half)
     ax.xaxis.set_major_locator(MaxNLocator(4))
     ax.set_yticks(range(len(labels_vals_colors)), [lab for lab, _, _ in labels_vals_colors])
@@ -277,8 +277,11 @@ def plot_isot_checks(df, author):
     ax.set_yticks(range(len(vals)), [label for label, _ in vals])
     ax.set_ylim(len(vals) - 0.4, -0.7)
     pts = [v for _, v in vals]
-    span = max(max(pts) - min(pts), 0.01)
-    ax.set_xlim(min(pts) - 0.15 * span, min(max(pts) + 0.15 * span, 1.0 + 0.05 * span))
+    # at least 0.02 wide, so near-identical scores are not stretched across the chart
+    half = max(0.7 * (max(pts) - min(pts)), 0.01)
+    centre = min((max(pts) + min(pts)) / 2, 1.0 - 0.85 * half)
+    ax.set_xlim(centre - half, centre + half)
+    ax.xaxis.set_major_locator(MaxNLocator(4))
     ax.grid(axis="y", visible=False)
     ax.set_xlabel("val macro-F1 (DistilBERT)")
     ax.set_title("ISOT checks: what is the model relying on?", loc="left")

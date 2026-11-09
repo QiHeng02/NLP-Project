@@ -1,0 +1,58 @@
+{
+  "timestamp": "20261109-065551-180918",
+  "model": "roberta",
+  "train_dataset": "liar6",
+  "dataset": "liar6",
+  "split": "test",
+  "author": "Menujaa",
+  "runtime_s": 97.99,
+  "params": {
+    "model_name": "roberta",
+    "max_len": 64,
+    "truncation": "head",
+    "head_frac": 0.25,
+    "lr": 1e-05,
+    "batch_size": 16,
+    "eval_batch_size": 64,
+    "epochs": 3,
+    "patience": 2,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "grad_accum": 1,
+    "grad_clip": 1.0,
+    "fp16": true,
+    "seed": 42,
+    "hf_id": "roberta-base",
+    "best_epoch": 3,
+    "epochs_run": 3,
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 1.7493,
+        "val_f1_macro": 0.2198,
+        "time_s": 32.5
+      },
+      {
+        "epoch": 2,
+        "train_loss": 1.6765,
+        "val_f1_macro": 0.2643,
+        "time_s": 31.8
+      },
+      {
+        "epoch": 3,
+        "train_loss": 1.6029,
+        "val_f1_macro": 0.2691,
+        "time_s": 32.1
+      }
+    ],
+    "truncated_share": 0.002,
+    "latency_ms_cpu": 30.2
+  },
+  "notes": "final: best-val lr",
+  "n": 1283,
+  "accuracy": 0.2977396726422447,
+  "precision_macro": 0.30868442220821296,
+  "recall_macro": 0.27828427036370385,
+  "f1_macro": 0.28039066101053084,
+  "f1_weighted": 0.2911116552336496
+}
