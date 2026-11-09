@@ -1,0 +1,327 @@
+name, memory.total [MiB]
+NVIDIA A40, 46068 MiB
+torch 2.11.0+cu128 | GPU available: True
+
+[bert | covid] bert-base-uncased max_len=128 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:  20%|█▉        | 39/199 [00:00<00:00, 367.48it/s]Loading weights:  38%|███▊      | 76/199 [00:00<00:00, 336.59it/s]Loading weights:  63%|██████▎   | 125/199 [00:00<00:00, 391.61it/s]Loading weights:  83%|████████▎ | 166/199 [00:00<00:00, 372.20it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 402.58it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 6420 texts in 0.4s; 0% reach max_len=128
+      step 200  loss=0.3777
+      step 400  loss=0.2638
+    epoch=1  train_loss=0.263  val_f1_macro=0.962  time_s=31.3
+      step 200  loss=0.0909
+      step 400  loss=0.0877
+    epoch=2  train_loss=0.0874  val_f1_macro=0.9662  time_s=27.6
+      step 200  loss=0.0330
+      step 400  loss=0.0322
+    epoch=3  train_loss=0.0327  val_f1_macro=0.97  time_s=27.3
+[bert | covid] CPU latency: 64.7 ms per input
+[bert | covid] val  acc=0.970 f1_macro=0.970 (best epoch 3, 97s)
+[bert | covid] test acc=0.973 f1_macro=0.973 (best epoch 3, 97s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.84it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.83it/s]
+[bert | covid] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/covid/bert
+
+[distilbert | covid] distilbert-base-uncased max_len=128 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights:  41%|████      | 41/100 [00:00<00:00, 351.16it/s]Loading weights:  89%|████████▉ | 89/100 [00:00<00:00, 389.02it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 427.17it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_projector.bias    | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.weight | UNEXPECTED | 
+pre_classifier.weight   | MISSING    | 
+classifier.bias         | MISSING    | 
+classifier.weight       | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 6420 texts in 0.2s; 0% reach max_len=128
+      step 200  loss=0.3956
+      step 400  loss=0.2757
+    epoch=1  train_loss=0.275  val_f1_macro=0.9626  time_s=16.9
+      step 200  loss=0.0776
+      step 400  loss=0.0781
+    epoch=2  train_loss=0.0781  val_f1_macro=0.9733  time_s=16.9
+      step 200  loss=0.0208
+      step 400  loss=0.0290
+    epoch=3  train_loss=0.0298  val_f1_macro=0.9742  time_s=17.0
+[distilbert | covid] CPU latency: 33.0 ms per input
+[distilbert | covid] val  acc=0.974 f1_macro=0.974 (best epoch 3, 52s)
+[distilbert | covid] test acc=0.974 f1_macro=0.974 (best epoch 3, 52s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  5.78it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  5.77it/s]
+[distilbert | covid] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/covid/distilbert
+
+[roberta | covid] roberta-base max_len=128 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights:   4%|▎         | 7/197 [00:00<00:03, 56.76it/s]Loading weights:   9%|▊         | 17/197 [00:00<00:02, 72.87it/s]Loading weights:  52%|█████▏    | 103/197 [00:00<00:00, 385.23it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 492.59it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.dense.weight       | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+classifier.dense.bias      | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.dense.weight    | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 6420 texts in 0.2s; 0% reach max_len=128
+      step 200  loss=0.4071
+      step 400  loss=0.2889
+    epoch=1  train_loss=0.2886  val_f1_macro=0.9597  time_s=28.7
+      step 200  loss=0.0984
+      step 400  loss=0.0977
+    epoch=2  train_loss=0.0974  val_f1_macro=0.9676  time_s=28.9
+      step 200  loss=0.0490
+      step 400  loss=0.0378
+    epoch=3  train_loss=0.0384  val_f1_macro=0.9723  time_s=28.7
+[roberta | covid] CPU latency: 67.2 ms per input
+[roberta | covid] val  acc=0.972 f1_macro=0.972 (best epoch 3, 88s)
+[roberta | covid] test acc=0.976 f1_macro=0.976 (best epoch 3, 88s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.15it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.15it/s]
+[roberta | covid] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/covid/roberta
+
+[bert | liar] bert-base-uncased max_len=64 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 7775.77it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.4s; 0% reach max_len=64
+      step 200  loss=0.6815
+      step 400  loss=0.6734
+      step 600  loss=0.6700
+    epoch=1  train_loss=0.6686  val_f1_macro=0.5872  time_s=42.4
+      step 200  loss=0.6167
+      step 400  loss=0.6125
+      step 600  loss=0.6090
+    epoch=2  train_loss=0.6075  val_f1_macro=0.628  time_s=42.2
+      step 200  loss=0.4770
+      step 400  loss=0.4811
+      step 600  loss=0.4774
+    epoch=3  train_loss=0.4764  val_f1_macro=0.6221  time_s=42.1
+[bert | liar] CPU latency: 45.9 ms per input
+[bert | liar] val  acc=0.632 f1_macro=0.628 (best epoch 2, 128s)
+[bert | liar] test acc=0.645 f1_macro=0.629 (best epoch 2, 128s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  2.11it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  2.11it/s]
+[bert | liar] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/liar/bert
+
+[distilbert | liar] distilbert-base-uncased max_len=64 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 8667.35it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_projector.bias    | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.weight | UNEXPECTED | 
+pre_classifier.weight   | MISSING    | 
+classifier.bias         | MISSING    | 
+classifier.weight       | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.4s; 0% reach max_len=64
+      step 200  loss=0.6767
+      step 400  loss=0.6676
+      step 600  loss=0.6646
+    epoch=1  train_loss=0.663  val_f1_macro=0.6293  time_s=25.9
+      step 200  loss=0.5992
+      step 400  loss=0.5961
+      step 600  loss=0.5918
+    epoch=2  train_loss=0.5902  val_f1_macro=0.6314  time_s=25.9
+      step 200  loss=0.4781
+      step 400  loss=0.4847
+      step 600  loss=0.4787
+    epoch=3  train_loss=0.477  val_f1_macro=0.6244  time_s=25.9
+[distilbert | liar] CPU latency: 23.2 ms per input
+[distilbert | liar] val  acc=0.639 f1_macro=0.631 (best epoch 2, 79s)
+[distilbert | liar] test acc=0.663 f1_macro=0.646 (best epoch 2, 79s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  6.12it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  6.11it/s]
+[distilbert | liar] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/liar/distilbert
+
+[roberta | liar] roberta-base max_len=64 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 7174.79it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.dense.weight       | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+classifier.dense.bias      | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.dense.weight    | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.5s; 0% reach max_len=64
+      step 200  loss=0.6854
+      step 400  loss=0.6843
+      step 600  loss=0.6809
+    epoch=1  train_loss=0.6797  val_f1_macro=0.53  time_s=43.9
+      step 200  loss=0.6475
+      step 400  loss=0.6414
+      step 600  loss=0.6380
+    epoch=2  train_loss=0.6375  val_f1_macro=0.6244  time_s=44.0
+      step 200  loss=0.5740
+      step 400  loss=0.5818
+      step 600  loss=0.5801
+    epoch=3  train_loss=0.5794  val_f1_macro=0.6496  time_s=43.9
+[roberta | liar] CPU latency: 45.3 ms per input
+[roberta | liar] val  acc=0.660 f1_macro=0.650 (best epoch 3, 134s)
+[roberta | liar] test acc=0.663 f1_macro=0.639 (best epoch 3, 134s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  2.54it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  2.53it/s]
+[roberta | liar] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/liar/roberta
+
+[bert | liar6] bert-base-uncased max_len=64 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 7651.38it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.4s; 0% reach max_len=64
+      step 200  loss=1.7910
+      step 400  loss=1.7641
+      step 600  loss=1.7490
+    epoch=1  train_loss=1.7458  val_f1_macro=0.211  time_s=42.7
+      step 200  loss=1.6559
+      step 400  loss=1.6459
+      step 600  loss=1.6371
+    epoch=2  train_loss=1.6349  val_f1_macro=0.2569  time_s=41.9
+      step 200  loss=1.4899
+      step 400  loss=1.4783
+      step 600  loss=1.4713
+    epoch=3  train_loss=1.4693  val_f1_macro=0.2735  time_s=42.2
+[bert | liar6] CPU latency: 45.7 ms per input
+[bert | liar6] val  acc=0.276 f1_macro=0.273 (best epoch 3, 128s)
+[bert | liar6] test acc=0.287 f1_macro=0.286 (best epoch 3, 128s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.76it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.75it/s]
+[bert | liar6] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/liar6/bert
+
+[distilbert | liar6] distilbert-base-uncased max_len=64 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 7795.52it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_projector.bias    | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.weight | UNEXPECTED | 
+pre_classifier.weight   | MISSING    | 
+classifier.bias         | MISSING    | 
+classifier.weight       | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.5s; 0% reach max_len=64
+      step 200  loss=1.7629
+      step 400  loss=1.7450
+      step 600  loss=1.7350
+    epoch=1  train_loss=1.732  val_f1_macro=0.2213  time_s=25.9
+      step 200  loss=1.6470
+      step 400  loss=1.6370
+      step 600  loss=1.6323
+    epoch=2  train_loss=1.63  val_f1_macro=0.2708  time_s=26.0
+      step 200  loss=1.5119
+      step 400  loss=1.5127
+      step 600  loss=1.5055
+    epoch=3  train_loss=1.504  val_f1_macro=0.2558  time_s=26.0
+[distilbert | liar6] CPU latency: 23.2 ms per input
+[distilbert | liar6] val  acc=0.269 f1_macro=0.271 (best epoch 2, 79s)
+[distilbert | liar6] test acc=0.291 f1_macro=0.277 (best epoch 2, 79s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  6.36it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  6.36it/s]
+[distilbert | liar6] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/liar6/distilbert
+
+[roberta | liar6] roberta-base max_len=64 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 7554.54it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.dense.weight       | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+classifier.dense.bias      | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.dense.weight    | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    tokenised 10269 texts in 0.4s; 0% reach max_len=64
+      step 200  loss=1.7750
+      step 400  loss=1.7643
+      step 600  loss=1.7559
+    epoch=1  train_loss=1.7534  val_f1_macro=0.1529  time_s=44.0
+      step 200  loss=1.7018
+      step 400  loss=1.6882
+      step 600  loss=1.6842
+    epoch=2  train_loss=1.6832  val_f1_macro=0.2591  time_s=43.8
+      step 200  loss=1.6016
+      step 400  loss=1.5972
+      step 600  loss=1.5923
+    epoch=3  train_loss=1.5908  val_f1_macro=0.2568  time_s=43.9
+[roberta | liar6] CPU latency: 44.9 ms per input
+[roberta | liar6] val  acc=0.273 f1_macro=0.259 (best epoch 2, 133s)
+[roberta | liar6] test acc=0.298 f1_macro=0.284 (best epoch 2, 133s)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  2.59it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  2.59it/s]
+[roberta | liar6] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/liar6/roberta
