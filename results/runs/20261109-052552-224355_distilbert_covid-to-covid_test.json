@@ -1,0 +1,59 @@
+{
+  "timestamp": "20261109-052552-224355",
+  "model": "distilbert",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "test",
+  "author": "Menujaa",
+  "runtime_s": 51.75,
+  "params": {
+    "model_name": "distilbert",
+    "max_len": 128,
+    "truncation": "head",
+    "head_frac": 0.25,
+    "lr": 2e-05,
+    "batch_size": 16,
+    "eval_batch_size": 64,
+    "epochs": 3,
+    "patience": 2,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "grad_accum": 1,
+    "grad_clip": 1.0,
+    "fp16": true,
+    "seed": 42,
+    "hf_id": "distilbert-base-uncased",
+    "best_epoch": 3,
+    "epochs_run": 3,
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.275,
+        "val_f1_macro": 0.9626,
+        "time_s": 16.9
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.0781,
+        "val_f1_macro": 0.9733,
+        "time_s": 16.9
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.0298,
+        "val_f1_macro": 0.9742,
+        "time_s": 17.0
+      }
+    ],
+    "truncated_share": 0.003,
+    "latency_ms_cpu": 33.0
+  },
+  "notes": "",
+  "n": 2140,
+  "accuracy": 0.9738317757009346,
+  "precision_macro": 0.9739578953269981,
+  "recall_macro": 0.9735994397759103,
+  "f1_macro": 0.97376495642671,
+  "f1_fake": 0.9724409448818898,
+  "roc_auc": 0.9966837359943977
+}

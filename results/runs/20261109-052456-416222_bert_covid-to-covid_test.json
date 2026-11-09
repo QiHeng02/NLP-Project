@@ -1,0 +1,59 @@
+{
+  "timestamp": "20261109-052456-416222",
+  "model": "bert",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "test",
+  "author": "Menujaa",
+  "runtime_s": 97.39,
+  "params": {
+    "model_name": "bert",
+    "max_len": 128,
+    "truncation": "head",
+    "head_frac": 0.25,
+    "lr": 2e-05,
+    "batch_size": 16,
+    "eval_batch_size": 64,
+    "epochs": 3,
+    "patience": 2,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "grad_accum": 1,
+    "grad_clip": 1.0,
+    "fp16": true,
+    "seed": 42,
+    "hf_id": "bert-base-uncased",
+    "best_epoch": 3,
+    "epochs_run": 3,
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.263,
+        "val_f1_macro": 0.962,
+        "time_s": 31.3
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.0874,
+        "val_f1_macro": 0.9662,
+        "time_s": 27.6
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.0327,
+        "val_f1_macro": 0.97,
+        "time_s": 27.3
+      }
+    ],
+    "truncated_share": 0.003,
+    "latency_ms_cpu": 64.7
+  },
+  "notes": "",
+  "n": 2140,
+  "accuracy": 0.9728971962616823,
+  "precision_macro": 0.9732566214017171,
+  "recall_macro": 0.9724877450980391,
+  "f1_macro": 0.9728173268298153,
+  "f1_fake": 0.9713438735177866,
+  "roc_auc": 0.9966255252100841
+}
