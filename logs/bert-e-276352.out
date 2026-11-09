@@ -1,27 +1,0 @@
-name, memory.total [MiB]
-NVIDIA A40, 49140 MiB
-torch 2.11.0+cu128 | GPU available: True
-
-[distilbert | covid] distilbert-base-uncased max_len=128 (head) lr=2e-05 batch=16x1 epochs=3 device=cuda fp16=True
-Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights:  29%|██▉       | 29/100 [00:00<00:00, 286.42it/s]Loading weights:  72%|███████▏  | 72/100 [00:00<00:00, 346.08it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 377.30it/s]
-[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
-Key                     | Status     | 
-------------------------+------------+-
-vocab_layer_norm.bias   | UNEXPECTED | 
-vocab_transform.weight  | UNEXPECTED | 
-vocab_transform.bias    | UNEXPECTED | 
-vocab_layer_norm.weight | UNEXPECTED | 
-vocab_projector.bias    | UNEXPECTED | 
-classifier.weight       | MISSING    | 
-pre_classifier.weight   | MISSING    | 
-classifier.bias         | MISSING    | 
-pre_classifier.bias     | MISSING    | 
-
-Notes:
-- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
-- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
-    tokenised 200 texts in 0.0s; 0% reach max_len=128
-    epoch=1  train_loss=0.6738  val_f1_macro=0.6376  time_s=1.3
-    epoch=2  train_loss=0.5815  val_f1_macro=0.8191  time_s=0.4
-    epoch=3  train_loss=0.4986  val_f1_macro=0.8149  time_s=0.4
-[distilbert | covid] val  acc=0.820 f1_macro=0.819 (best epoch 2, 24s)

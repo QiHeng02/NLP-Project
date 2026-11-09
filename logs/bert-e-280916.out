@@ -1,40 +1,0 @@
-name, memory.total [MiB]
-NVIDIA A40, 49140 MiB
-torch 2.11.0+cu128 | GPU available: True
-
-[bert | liar] bert-base-uncased max_len=64 (head) lr=3e-05 batch=16x1 epochs=3 device=cuda fp16=True
-Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:  19%|█▉        | 38/199 [00:00<00:00, 320.55it/s]Loading weights:  38%|███▊      | 75/199 [00:00<00:00, 336.31it/s]Loading weights:  59%|█████▉    | 117/199 [00:00<00:00, 359.12it/s]Loading weights:  78%|███████▊  | 155/199 [00:00<00:00, 356.92it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 369.30it/s]
-[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
-Key                                        | Status     | 
--------------------------------------------+------------+-
-cls.predictions.bias                       | UNEXPECTED | 
-cls.predictions.transform.dense.weight     | UNEXPECTED | 
-cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
-cls.seq_relationship.bias                  | UNEXPECTED | 
-cls.seq_relationship.weight                | UNEXPECTED | 
-cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
-cls.predictions.transform.dense.bias       | UNEXPECTED | 
-classifier.bias                            | MISSING    | 
-classifier.weight                          | MISSING    | 
-
-Notes:
-- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
-- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
-    tokenised 10269 texts in 0.5s; 0% reach max_len=64
-      step 200  loss=0.6800
-      step 400  loss=0.6795
-      step 600  loss=0.6772
-    epoch=1  train_loss=0.6762  val_f1_macro=0.5009  time_s=32.5
-      step 200  loss=0.6332
-      step 400  loss=0.6283
-      step 600  loss=0.6269
-    epoch=2  train_loss=0.6256  val_f1_macro=0.6205  time_s=31.0
-      step 200  loss=0.5074
-      step 400  loss=0.5058
-      step 600  loss=0.4985
-    epoch=3  train_loss=0.497  val_f1_macro=0.6433  time_s=30.9
-[bert | liar] CPU latency: 29.6 ms per input
-[bert | liar] val  acc=0.651 f1_macro=0.643 (best epoch 3, 120s)
-[bert | liar] test acc=0.646 f1_macro=0.627 (best epoch 3, 120s)
-Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.67it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  3.67it/s]
-[bert | liar] saved -> /projects/_ssd/fakenewsnlp/NLP-Project/models/transformers/liar/bert
