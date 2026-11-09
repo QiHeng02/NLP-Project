@@ -498,6 +498,32 @@ class GATLayer(nn.Module):
         return output
 
 
+def build_gat_node_features(tfidf_matrix, n_components=64):
+    """Create shared SVD features for document and word nodes."""
+    from sklearn.decomposition import TruncatedSVD
+
+    num_documents, vocab_size = tfidf_matrix.shape
+    n_components = min(n_components, num_documents - 1, vocab_size - 1)
+
+    svd = TruncatedSVD(n_components=n_components, random_state=42)
+    document_features = svd.fit_transform(tfidf_matrix).astype(np.float32)
+    word_features = (
+        svd.components_.T * svd.singular_values_
+    ).astype(np.float32)
+
+    document_features /= np.maximum(
+        np.linalg.norm(document_features, axis=1, keepdims=True), 1e-12
+    )
+    word_features /= np.maximum(
+        np.linalg.norm(word_features, axis=1, keepdims=True), 1e-12
+    )
+
+    return torch.tensor(
+        np.vstack([document_features, word_features]),
+        dtype=torch.float32,
+    )
+
+
 class GraphAttentionNetwork(nn.Module):
     """Two-layer sparse GAT for graph-based classification."""
 
@@ -507,36 +533,40 @@ class GraphAttentionNetwork(nn.Module):
         hidden_dim=64,
         num_classes=2,
         dropout=0.5,
+        node_features=None,
     ):
         super().__init__()
 
-        self.node_embeddings = nn.Parameter(
-            torch.empty(num_nodes, hidden_dim)
-        )
-        nn.init.xavier_uniform_(self.node_embeddings)
+        if node_features is None:
+            self.node_embeddings = nn.Parameter(
+                torch.empty(num_nodes, hidden_dim)
+            )
+            nn.init.xavier_uniform_(self.node_embeddings)
+            self.register_buffer("node_features", None)
+        else:
+            if node_features.shape != (num_nodes, hidden_dim):
+                raise ValueError(
+                    f"Expected node features with shape "
+                    f"({num_nodes}, {hidden_dim}), got "
+                    f"{tuple(node_features.shape)}"
+                )
+            self.node_embeddings = None
+            self.register_buffer("node_features", node_features)
 
         self.dropout = nn.Dropout(dropout)
-
-        self.gat1 = GATLayer(
-            hidden_dim,
-            hidden_dim,
-            dropout,
-        )
-
-        self.gat2 = GATLayer(
-            hidden_dim,
-            num_classes,
-            dropout,
-        )
+        self.gat1 = GATLayer(hidden_dim, hidden_dim, dropout)
+        self.gat2 = GATLayer(hidden_dim, num_classes, dropout)
 
     def forward(self, edge_index):
-        hidden = self.gat1(self.node_embeddings, edge_index)
+        features = (
+            self.node_embeddings
+            if self.node_features is None
+            else self.node_features
+        )
+        hidden = self.gat1(features, edge_index)
         hidden = torch.relu(hidden)
         hidden = self.dropout(hidden)
-
-        logits = self.gat2(hidden, edge_index)
-
-        return logits
+        return self.gat2(hidden, edge_index)
 
 
 def train_gat(
@@ -552,6 +582,7 @@ def train_gat(
     epochs=100,
     patience=10,
     num_classes=2,
+    node_features=None,
 ):
     """Train GAT using training labels and validation Macro-F1."""
 
@@ -579,6 +610,7 @@ def train_gat(
         hidden_dim=hidden_dim,
         num_classes=num_classes,
         dropout=dropout,
+        node_features=node_features,
     ).to(device)
 
     optimizer = torch.optim.Adam(

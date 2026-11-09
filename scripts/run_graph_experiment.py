@@ -1,4 +1,4 @@
-﻿"""Run TextGCN or GAT on a supported fake-news detection task."""
+"""Run TextGCN or GAT on a supported fake-news detection task."""
 
 import argparse
 import json
@@ -22,6 +22,7 @@ from src.models.graph import (
     normalize_adjacency,
     scipy_to_torch_sparse,
     build_gat_edge_index,
+    build_gat_node_features,
     train_textgcn,
     train_gat,
 )
@@ -50,7 +51,14 @@ def parse_args():
     parser.add_argument("--max-features", type=int, default=20000)
     parser.add_argument("--min-df", type=int, default=5)
     parser.add_argument("--top-k", type=int, default=10)
-    parser.add_argument("--isot-sample-size", type=int, default=10000)
+    parser.add_argument("--gat-features", choices=["random", "tfidf-svd"], default="random")
+    parser.add_argument("--dropout", type=float, default=None, help="Override the model dropout rate.")
+    parser.add_argument(
+        "--isot-sample-size",
+        type=int,
+        default=10000,
+        help="Number of ISOT training documents to sample; validation and test remain complete.",
+    )
     return parser.parse_args()
 
 
@@ -108,9 +116,12 @@ def main():
     else:
         hidden_dim = 64
         dropout = 0.5
-        learning_rate = 0.005
+        learning_rate = 0.001
         patience = 15
         epochs = args.epochs or 100
+
+    if args.dropout is not None:
+        dropout = args.dropout
 
     num_classes = 6 if args.task == "multiclass" else 2
 
@@ -122,37 +133,32 @@ def main():
     # 1. Load the existing official splits.
     print("\nLoading dataset...")
     splits = load_splits(args.dataset)
-    # Reproducible, stratified sampling within each official ISOT split.
+
+    # Reproducible, stratified sampling of the ISOT training split only.
+    # Keep the complete official validation and test splits unchanged.
     if args.dataset == "isot":
-        if args.isot_sample_size < 3:
-            raise ValueError("ISOT sample size must be at least 3.")
+        if args.isot_sample_size < 2:
+            raise ValueError("ISOT training sample size must be at least 2.")
 
-        train_n = round(args.isot_sample_size * 0.8)
-        val_n = round(args.isot_sample_size * 0.1)
-        test_n = args.isot_sample_size - train_n - val_n
+        train_frame = splits["train"]
 
-        targets = {"train": train_n, "val": val_n, "test": test_n}
-
-        for split_name, target_n in targets.items():
-            frame = splits[split_name]
-
-            if target_n > len(frame):
-                raise ValueError(
-                    f"Requested {target_n} ISOT {split_name} rows, "
-                    f"but only {len(frame)} are available."
-                )
-
-            sampled, _ = train_test_split(
-                frame,
-                train_size=target_n,
-                stratify=frame["label"],
-                random_state=42,
+        if args.isot_sample_size > len(train_frame):
+            raise ValueError(
+                f"Requested {args.isot_sample_size} ISOT training rows, "
+                f"but only {len(train_frame)} are available."
             )
 
-            splits[split_name] = sampled.sort_index().reset_index(drop=True)
+        sampled_train, _ = train_test_split(
+            train_frame,
+            train_size=args.isot_sample_size,
+            stratify=train_frame["label"],
+            random_state=42,
+        )
+
+        splits["train"] = sampled_train.sort_index().reset_index(drop=True)
 
         print(
-            "ISOT stratified sample sizes:",
+            "ISOT split sizes:",
             {name: len(frame) for name, frame in splits.items()},
         )
 
@@ -242,9 +248,19 @@ def main():
         )
         print(f"Number of directed edges: {edge_index.shape[1]}")
 
+        node_features = None
+        if args.gat_features == "tfidf-svd":
+            print("\nBuilding SVD node features...")
+            node_features = build_gat_node_features(
+                tfidf_matrix,
+                n_components=hidden_dim,
+            )
+            print("Node feature shape:", tuple(node_features.shape))
+
         print("\nStarting GAT training...")
         model, history = train_gat(
             edge_index=edge_index,
+            node_features=node_features,
             num_nodes=adjacency.shape[0],
             train_labels=train_labels,
             val_labels=val_labels,
@@ -261,6 +277,8 @@ def main():
     training_runtime = time.perf_counter() - start_time
 
     # 5. Evaluate on validation data only.
+    # The test split is included in the transductive graph as unlabeled text,
+    # but its labels are not used for model selection or evaluation here.
     model.eval()
     with torch.no_grad():
         if args.model == "textgcn":
@@ -298,6 +316,8 @@ def main():
     run_name = f"{args.model}_{task_name}"
     if args.model == "gat":
         run_name += f"_top{args.top_k}_lr{learning_rate:g}"
+        if args.gat_features != "random":
+            run_name += f"_{args.gat_features}"
 
     checkpoint_path = checkpoint_dir / f"{run_name}.pt"
 
@@ -316,6 +336,7 @@ def main():
 
     if args.model == "gat":
         checkpoint["top_k"] = args.top_k
+        checkpoint["gat_features"] = args.gat_features
 
     torch.save(checkpoint, checkpoint_path)
 
@@ -356,7 +377,7 @@ def main():
             "Transductive graph construction includes train, validation "
             "and test document texts. Only training labels are used for "
             "gradient updates. Validation labels select the checkpoint. "
-            "Test labels are not used for evaluation."
+            "Test labels are not used for evaluation in this validation run."
         ),
     )
 
@@ -369,5 +390,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
