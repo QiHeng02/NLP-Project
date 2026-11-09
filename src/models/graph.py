@@ -1,18 +1,19 @@
 
-
 from __future__ import annotations
 
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer
-from scipy.sparse import coo_matrix
+from collections import Counter
 from itertools import combinations
 from math import log
-from scipy.sparse import eye
+
 import numpy as np
+import scipy.sparse as sp
 import torch
 import torch.nn as nn
+from scipy.sparse import coo_matrix, eye
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
-import scipy.sparse as sp
+
 
 _TOKEN_PATTERN = re.compile(r"[a-z0-9]+(?:'[a-z]+)?")
 
@@ -24,19 +25,13 @@ def tokenize(text: str) -> list[str]:
 
     return _TOKEN_PATTERN.findall(text.lower())
 
-from collections import Counter
-
 
 def build_vocabulary(
     texts: list[str],
     min_df: int = 5,
     max_features: int | None = None,
 ) -> dict[str, int]:
-    """Build a deterministic word-to-index vocabulary.
-
-    min_df: minimum number of documents in which a word must appear.
-    max_features: maximum vocabulary size; None means no limit.
-    """
+    """Build a deterministic word-to-index vocabulary."""
     document_frequency = Counter()
 
     for text in texts:
@@ -49,13 +44,14 @@ def build_vocabulary(
         if frequency >= min_df
     ]
 
-    # Sort by descending document frequency, then alphabetically.
     words.sort(key=lambda item: (-item[1], item[0]))
 
     if max_features is not None:
         words = words[:max_features]
 
     return {word: index for index, (word, _) in enumerate(words)}
+
+
 def build_tfidf_matrix(
     texts: list[str],
     vocabulary: dict[str, int],
@@ -71,12 +67,11 @@ def build_tfidf_matrix(
 
     return vectorizer.fit_transform(texts), vectorizer
 
+
 def build_document_word_adjacency(tfidf_matrix):
     """Create a bipartite adjacency matrix from document-word TF-IDF."""
-
     num_docs, num_words = tfidf_matrix.shape
 
-    # Document nodes come first, followed by word nodes.
     doc_word = tfidf_matrix.tocoo()
 
     rows = list(doc_word.row)
@@ -102,7 +97,6 @@ def build_word_word_pmi(
     window_size: int = 20,
 ):
     """Build a symmetric word-word PPMI matrix using sliding windows."""
-
     if window_size < 2:
         raise ValueError("window_size must be at least 2")
 
@@ -116,7 +110,6 @@ def build_word_word_pmi(
         if not tokens:
             continue
 
-        # Slide a window across the document.
         if len(tokens) <= window_size:
             windows = [tokens]
         else:
@@ -132,11 +125,7 @@ def build_word_word_pmi(
                 continue
 
             total_windows += 1
-
-            # Count each word once per window.
             word_frequency.update(unique_words)
-
-            # Count each word pair once per window.
             pair_frequency.update(combinations(unique_words, 2))
 
     rows = []
@@ -154,7 +143,6 @@ def build_word_word_pmi(
             / (word_frequency[word_a] * word_frequency[word_b])
         )
 
-        # Keep only positive PMI connections.
         if pmi > 0:
             i = vocabulary[word_a]
             j = vocabulary[word_b]
@@ -173,7 +161,6 @@ def build_word_word_pmi(
 
 def combine_graph_adjacencies(document_word_adjacency, word_word_pmi):
     """Combine document-word and word-word edges into one graph."""
-
     num_docs = document_word_adjacency.shape[0] - word_word_pmi.shape[0]
 
     if num_docs < 0:
@@ -185,7 +172,6 @@ def combine_graph_adjacencies(document_word_adjacency, word_word_pmi):
     ):
         raise ValueError("Document-word adjacency has an invalid shape")
 
-    # Shift word indices because document nodes come first.
     pmi = word_word_pmi.tocoo()
 
     word_word_full = coo_matrix(
@@ -196,35 +182,31 @@ def combine_graph_adjacencies(document_word_adjacency, word_word_pmi):
         shape=document_word_adjacency.shape,
     ).tocsr()
 
-    # Combine both sets of edges.
     adjacency = (document_word_adjacency + word_word_full).tocsr()
 
     return adjacency
 
+
 def normalize_adjacency(adjacency):
     """Add self-loops and apply symmetric GCN normalization."""
-
     if adjacency.shape[0] != adjacency.shape[1]:
         raise ValueError("Adjacency matrix must be square")
 
-    # Add one self-loop to every node.
     adjacency = adjacency.tocsr()
+
     adjacency_with_self_loops = adjacency + eye(
         adjacency.shape[0],
         format="csr",
     )
 
-    # Calculate node degrees.
     degrees = np.asarray(
         adjacency_with_self_loops.sum(axis=1)
     ).flatten()
 
-    # Calculate inverse square-root degrees.
     inv_sqrt_degrees = np.zeros_like(degrees, dtype=float)
     nonzero = degrees > 0
     inv_sqrt_degrees[nonzero] = degrees[nonzero] ** -0.5
 
-    # D^(-1/2) A D^(-1/2)
     normalized = adjacency_with_self_loops.multiply(
         inv_sqrt_degrees[:, None]
     ).multiply(
@@ -236,12 +218,9 @@ def normalize_adjacency(adjacency):
 
 def scipy_to_torch_sparse(matrix):
     """Convert a SciPy sparse matrix into a PyTorch sparse tensor."""
-
     matrix = matrix.tocoo()
 
-    # Convert indices efficiently using NumPy arrays.
     indices = np.vstack((matrix.row, matrix.col)).astype(np.int64)
-
     values = matrix.data.astype(np.float32, copy=False)
 
     return torch.sparse_coo_tensor(
@@ -298,11 +277,11 @@ def train_textgcn(
     learning_rate=0.02,
     epochs=100,
     patience=10,
+    num_classes=2,
 ):
     """Train TextGCN using training labels and validation Macro-F1."""
 
     torch.manual_seed(42)
-
     device = torch.device("cpu")
 
     adjacency = adjacency.to(device)
@@ -324,7 +303,7 @@ def train_textgcn(
     model = TextGCN(
         num_nodes=adjacency.shape[0],
         hidden_dim=hidden_dim,
-        num_classes=2,
+        num_classes=num_classes,
         dropout=dropout,
     ).to(device)
 
@@ -343,7 +322,6 @@ def train_textgcn(
     history = []
 
     for epoch in range(epochs):
-        # Training: use training document labels only.
         model.train()
         optimizer.zero_grad(set_to_none=True)
 
@@ -357,7 +335,6 @@ def train_textgcn(
         train_loss.backward()
         optimizer.step()
 
-        # Validation: no gradient updates.
         model.eval()
 
         with torch.no_grad():
@@ -383,7 +360,6 @@ def train_textgcn(
             f"Val Macro-F1: {val_f1:.4f}"
         )
 
-        # Save the best validation checkpoint.
         if val_f1 > best_val_f1:
             best_val_f1 = val_f1
             best_epoch = epoch + 1
@@ -407,6 +383,7 @@ def train_textgcn(
     print(f"Best validation Macro-F1: {best_val_f1:.4f}")
 
     return model, history
+
 
 def build_gat_edge_index(adjacency, top_k=10):
     """
@@ -444,7 +421,6 @@ def build_gat_edge_index(adjacency, top_k=10):
         dtype=np.float32,
     )
 
-    # Make the graph symmetric and add self-loops.
     pruned = pruned.maximum(pruned.T)
     pruned.setdiag(1.0)
     pruned.eliminate_zeros()
@@ -476,14 +452,11 @@ class GATLayer(nn.Module):
     def forward(self, features, edge_index):
         num_nodes = features.shape[0]
 
-        # Transform node features.
         hidden = self.linear(self.dropout(features))
 
-        # Each edge sends a message from source to destination.
         destination = edge_index[0]
         source = edge_index[1]
 
-        # Calculate attention scores for each edge.
         source_score = (hidden * self.attention_source).sum(dim=1)
         target_score = (hidden * self.attention_target).sum(dim=1)
 
@@ -492,7 +465,6 @@ class GATLayer(nn.Module):
             negative_slope=0.2,
         )
 
-        # Numerically stable softmax, separately for each destination.
         max_scores = torch.full(
             (num_nodes,),
             float("-inf"),
@@ -516,7 +488,6 @@ class GATLayer(nn.Module):
 
         attention = exp_scores / (denominator[destination] + 1e-16)
 
-        # Aggregate weighted neighbour features.
         messages = attention.unsqueeze(1) * hidden[source]
 
         output = torch.zeros(
@@ -580,6 +551,7 @@ def train_gat(
     learning_rate=0.005,
     epochs=100,
     patience=10,
+    num_classes=2,
 ):
     """Train GAT using training labels and validation Macro-F1."""
 
@@ -605,7 +577,7 @@ def train_gat(
     model = GraphAttentionNetwork(
         num_nodes=num_nodes,
         hidden_dim=hidden_dim,
-        num_classes=2,
+        num_classes=num_classes,
         dropout=dropout,
     ).to(device)
 
@@ -686,5 +658,3 @@ def train_gat(
     print(f"Best validation Macro-F1: {best_val_f1:.4f}")
 
     return model, history
-
-

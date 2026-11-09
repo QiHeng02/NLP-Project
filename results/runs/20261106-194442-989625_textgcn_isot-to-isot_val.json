@@ -1,0 +1,29 @@
+{
+  "timestamp": "20261106-194442-989625",
+  "model": "textgcn",
+  "train_dataset": "isot",
+  "dataset": "isot",
+  "split": "val",
+  "author": "Sneha",
+  "runtime_s": 333.63076679990627,
+  "params": {
+    "hidden_dim": 200,
+    "dropout": 0.5,
+    "learning_rate": 0.02,
+    "epochs": 50,
+    "patience": 10,
+    "min_df": 5,
+    "max_features": 5000,
+    "window_size": 20,
+    "seed": 42,
+    "num_classes": 2
+  },
+  "notes": "Transductive graph construction includes train, validation and test document texts. Only training labels are used for gradient updates. Validation labels select the checkpoint. Test labels are not used for evaluation.",
+  "n": 500,
+  "accuracy": 0.926,
+  "precision_macro": 0.9271058930810441,
+  "recall_macro": 0.9235675989923131,
+  "f1_macro": 0.9250256331281332,
+  "f1_fake": 0.9164785553047404,
+  "roc_auc": 0.9766810929526515
+}
