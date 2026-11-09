@@ -53,6 +53,7 @@ def parse_args():
     parser.add_argument("--top-k", type=int, default=10)
     parser.add_argument("--gat-features", choices=["random", "tfidf-svd"], default="random")
     parser.add_argument("--dropout", type=float, default=None, help="Override the model dropout rate.")
+    parser.add_argument("--learning-rate", type=float, default=None, help="Override the model learning rate.")
     parser.add_argument(
         "--isot-sample-size",
         type=int,
@@ -81,12 +82,14 @@ def get_labels(splits, dataset, task):
         return (
             encode(splits["train"]),
             encode(splits["val"]),
+            encode(splits["test"]),
             len(LIAR_LABELS_6),
         )
 
     return (
         splits["train"]["label"].to_numpy(dtype=np.int64),
         splits["val"]["label"].to_numpy(dtype=np.int64),
+        splits["test"]["label"].to_numpy(dtype=np.int64),
         2,
     )
 
@@ -122,6 +125,9 @@ def main():
 
     if args.dropout is not None:
         dropout = args.dropout
+
+    if args.learning_rate is not None:
+        learning_rate = args.learning_rate
 
     num_classes = 6 if args.task == "multiclass" else 2
 
@@ -166,7 +172,7 @@ def main():
     val_texts = splits["val"]["text"].fillna("").astype(str).tolist()
     test_texts = splits["test"]["text"].fillna("").astype(str).tolist()
 
-    train_labels, val_labels, num_classes = get_labels(
+    train_labels, val_labels, test_labels, num_classes = get_labels(
         splits, args.dataset, args.task
     )
 
@@ -178,6 +184,10 @@ def main():
 
     train_indices = np.arange(num_train)
     val_indices = np.arange(num_train, num_train + num_val)
+    test_indices = np.arange(
+        num_train + num_val,
+        num_train + num_val + len(test_texts),
+    )
 
     print(f"Train documents: {num_train}")
     print(f"Validation documents: {num_val}")
@@ -309,6 +319,31 @@ def main():
         else:
             print(f"{name}: {value}")
 
+    # Evaluate the validation-selected model on the held-out test split.
+    with torch.no_grad():
+        test_logits = logits[test_indices]
+        test_predictions = test_logits.argmax(dim=1).cpu().numpy()
+
+        test_probabilities = None
+        if args.task == "binary":
+            test_probabilities = torch.softmax(
+                test_logits, dim=1
+            )[:, 1].cpu().numpy()
+
+    test_metrics = compute_metrics(
+        test_labels,
+        test_predictions,
+        y_score=test_probabilities,
+        task=args.task,
+    )
+
+    print("\nTest results:")
+    for name, value in test_metrics.items():
+        if isinstance(value, float):
+            print(f"{name}: {value:.4f}")
+        else:
+            print(f"{name}: {value}")
+
     # 6. Save a uniquely named checkpoint.
     checkpoint_dir = Path("models")
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
@@ -381,11 +416,27 @@ def main():
         ),
     )
 
+    test_run_path = log_run(
+        model=args.model,
+        dataset=task_name,
+        split="test",
+        metrics=test_metrics,
+        params=params,
+        runtime_s=training_runtime,
+        author="Sneha",
+        notes=(
+            "Final held-out test evaluation using the checkpoint selected "
+            "by validation macro-F1. Test labels are used only for this "
+            "final evaluation, not for training or model selection."
+        ),
+    )
+
     print("\nExperiment completed!")
     print(f"Training time: {training_runtime:.2f} seconds")
     print(f"Checkpoint: {checkpoint_path}")
     print(f"History: {history_path}")
     print(f"Validation run record: {run_path}")
+    print(f"Test run record: {test_run_path}")
 
 
 if __name__ == "__main__":

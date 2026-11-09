@@ -69,6 +69,31 @@ Run every command from the **repository root**; the `python -m scripts.<name>` f
 
 Every model we build should beat these.
 
+### Graph-based models (final held-out test results)
+
+ISOT uses a stratified sample of 10,000 training articles; its full validation
+and test splits (3,823 each) are retained. Other datasets use their official
+training, validation and test splits. Checkpoints are selected using validation
+macro-F1; test labels are used only once for final evaluation.
+
+| Dataset / task | Model | Test samples | Accuracy | Macro-F1 |
+|---|---|---:|---:|---:|
+| COVID (binary) | TextGCN | 2,140 | 0.9248 | 0.9242 |
+| COVID (binary) | GAT | 2,140 | 0.8561 | 0.8538 |
+| LIAR (binary) | TextGCN | 1,283 | 0.6103 | 0.6064 |
+| LIAR (binary) | GAT | 1,283 | 0.5659 | 0.3663 |
+| LIAR (6-class) | TextGCN | 1,283 | 0.2206 | 0.1953 |
+| LIAR (6-class) | GAT | 1,283 | 0.1980 | 0.0609 |
+| ISOT (binary) | TextGCN | 3,823 | 0.9626 | 0.9622 |
+| ISOT (binary) | GAT | 3,823 | 0.8313 | 0.8253 |
+
+**Observation:** TextGCN outperforms GAT on all four dataset/task settings.
+GAT performs particularly poorly on LIAR, especially the six-class task;
+these results are reported as a limitation rather than interpreted as
+competitive performance. Individual experiment metrics and configurations
+are recorded in `results/runs/`.
+
+
 ---
 
 ## Repository structure
