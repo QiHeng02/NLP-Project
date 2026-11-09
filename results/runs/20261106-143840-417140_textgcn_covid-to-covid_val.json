@@ -1,0 +1,28 @@
+{
+  "timestamp": "20261106-143840-417140",
+  "model": "textgcn",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "val",
+  "author": "Sneha",
+  "runtime_s": 137.55882330005988,
+  "params": {
+    "hidden_dim": 200,
+    "dropout": 0.5,
+    "learning_rate": 0.02,
+    "epochs": 54,
+    "patience": 10,
+    "min_df": 5,
+    "max_features": 20000,
+    "window_size": 20,
+    "seed": 42
+  },
+  "notes": "Transductive TextGCN. All document texts included in graph construction; only training labels used for gradient updates. Validation labels used for checkpoint selection.",
+  "n": 2140,
+  "accuracy": 0.9219626168224299,
+  "precision_macro": 0.9250337605986141,
+  "recall_macro": 0.9201505602240896,
+  "f1_macro": 0.9214372468523129,
+  "f1_fake": 0.9150127226463104,
+  "roc_auc": 0.9790966386554621
+}

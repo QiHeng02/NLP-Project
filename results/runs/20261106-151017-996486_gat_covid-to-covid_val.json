@@ -1,0 +1,30 @@
+{
+  "timestamp": "20261106-151017-996486",
+  "model": "gat",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "val",
+  "author": "Sneha",
+  "runtime_s": 19.850609899964184,
+  "params": {
+    "experiment": "top20_neighbours",
+    "hidden_dim": 64,
+    "dropout": 0.5,
+    "learning_rate": 0.001,
+    "epochs": 34,
+    "patience": 15,
+    "min_df": 5,
+    "max_features": 20000,
+    "window_size": 20,
+    "top_k": 20,
+    "seed": 42
+  },
+  "notes": "Transductive sparse GAT with learning rate 0.001 and top-20 neighbours per node. All document texts included in graph construction; only training labels used for gradient updates. Validation labels used for checkpoint selection.",
+  "n": 2140,
+  "accuracy": 0.852803738317757,
+  "precision_macro": 0.8650247430110278,
+  "recall_macro": 0.8484768907563025,
+  "f1_macro": 0.8501837199642361,
+  "f1_fake": 0.8303715670436187,
+  "roc_auc": 0.9456442577030812
+}

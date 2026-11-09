@@ -1,0 +1,30 @@
+{
+  "timestamp": "20261109-190313-239071",
+  "model": "gat",
+  "train_dataset": "liar",
+  "dataset": "liar",
+  "split": "val",
+  "author": "Sneha",
+  "runtime_s": 13.667618731000402,
+  "params": {
+    "hidden_dim": 64,
+    "dropout": 0.2,
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "patience": 15,
+    "min_df": 5,
+    "max_features": 20000,
+    "window_size": 20,
+    "seed": 42,
+    "num_classes": 2,
+    "top_k": 10
+  },
+  "notes": "Transductive graph construction includes train, validation and test document texts. Only training labels are used for gradient updates. Validation labels select the checkpoint. Test labels are not used for evaluation in this validation run.",
+  "n": 1284,
+  "accuracy": 0.4945482866043614,
+  "precision_macro": 0.4380983606557377,
+  "recall_macro": 0.47820592581071625,
+  "f1_macro": 0.3844646984392901,
+  "f1_fake": 0.1241565452091768,
+  "roc_auc": 0.4456569814915623
+}
