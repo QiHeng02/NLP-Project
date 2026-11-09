@@ -11,7 +11,7 @@ Charts
     tr_speed.png           val score vs training time (and CPU latency once --latency runs exist)
     tr_curves.png          val macro-F1 after every epoch
     tr_lr.png              learning-rate sensitivity (runs tagged --notes "sens: lr")
-    tr_isot_checks.png     ISOT shortcut checks (head vs head+tail, no web clutter, titles only)
+    tr_isot_checks.png     ISOT shortcut checks (start only, start + end, no web clutter, headline + article)
     tr_test_models.png     final TEST score per task: BERT vs DistilBERT vs RoBERTa
     tr_bars_<split>.png    grouped bars of the score per task (axis from 0)
     tr_table_<split>.png   score table, best model per task starred
@@ -74,13 +74,18 @@ def load_runs() -> pd.DataFrame:
 
 
 def main_runs(df: pd.DataFrame, split: str, author: str | None) -> pd.DataFrame:
-    """The headline transformer run per (model, task): default lr, default truncation, no notes."""
+    """The headline transformer run per (model, task), latest first.
+
+    Either a default run (lr 2e-5, no notes) or a rerun tagged --notes "final..." (e.g. with the
+    best-val learning rate); checks, sensitivity and cross-dataset runs are left out.
+    """
     t = df[df["model"].isin([m for m, _ in TRANSFORMERS]) & (df["split"] == split)]
     if author:
         t = t[t["author"] == author]
-    t = t[(t["params.lr"].fillna(DEFAULT_LR).round(10) == DEFAULT_LR)
-          & (t["params.seed"].fillna(42) == 42)
-          & ~t["notes"].str.startswith(("check", "sens", "cross"))]
+    is_final = t["notes"].str.startswith("final")
+    is_default = ((t["params.lr"].fillna(DEFAULT_LR).round(10) == DEFAULT_LR)
+                  & ~t["notes"].str.startswith(("check", "sens", "cross")))
+    t = t[(is_final | is_default) & (t["params.seed"].fillna(42) == 42)]
     if t.empty:
         return t
     ok = [r["params.truncation"] in (None, DEFAULT_TRUNC.get(r["dataset"], "head")) for _, r in t.iterrows()]
@@ -257,7 +262,7 @@ def plot_isot_checks(df, author):
         return None if r.empty else float(r.sort_values("timestamp").iloc[-1]["f1_macro"])
 
     variants = [("Start + end (main)", "isot", "head_tail"), ("Start only", "isot", "head"),
-                ("No web clutter", "isot_nostyle", "head_tail"), ("Headline only", "isot_title", "head")]
+                ("No web clutter", "isot_nostyle", "head_tail"), ("Headline + article", "isot_title", "head")]
     model = "distilbert"
     vals = [(label, pick(model, d, tr)) for label, d, tr in variants]
     vals = [(label, v) for label, v in vals if v is not None]
@@ -276,7 +281,7 @@ def plot_isot_checks(df, author):
     ax.set_xlim(min(pts) - 0.15 * span, min(max(pts) + 0.15 * span, 1.0 + 0.05 * span))
     ax.grid(axis="y", visible=False)
     ax.set_xlabel("val macro-F1 (DistilBERT)")
-    ax.set_title("ISOT: does the model need the article's content?", loc="left")
+    ax.set_title("ISOT checks: what is the model relying on?", loc="left")
     fig.tight_layout()
     save(fig, "tr_isot_checks.png")
 
