@@ -19,6 +19,7 @@ kaggle.json
 # --- generated results (runs/*.json and figures ARE committed) ---
 results/summary.csv
 results/pivot_*.csv
+results/llm_cache/
 
 # --- experiment trackers / HF caches ---
 wandb/
