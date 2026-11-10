@@ -1,0 +1,30 @@
+{
+  "timestamp": "20261109-234947-921068",
+  "model": "gat",
+  "train_dataset": "isot",
+  "dataset": "isot",
+  "split": "test",
+  "author": "Sneha",
+  "runtime_s": 38.58383155699994,
+  "params": {
+    "hidden_dim": 64,
+    "dropout": 0.5,
+    "learning_rate": 0.001,
+    "epochs": 100,
+    "patience": 15,
+    "min_df": 5,
+    "max_features": 20000,
+    "window_size": 20,
+    "seed": 42,
+    "num_classes": 2,
+    "top_k": 10
+  },
+  "notes": "Final held-out test evaluation using the checkpoint selected by validation macro-F1. Test labels are used only for this final evaluation, not for training or model selection.",
+  "n": 3823,
+  "accuracy": 0.8312843316766937,
+  "precision_macro": 0.8443281516732482,
+  "recall_macro": 0.8211682037041332,
+  "f1_macro": 0.8253273577974983,
+  "f1_fake": 0.793070259865255,
+  "roc_auc": 0.920936322575728
+}
