@@ -1,0 +1,29 @@
+{
+  "timestamp": "20261109-234508-937036",
+  "model": "gat",
+  "train_dataset": "liar6",
+  "dataset": "liar6",
+  "split": "test",
+  "author": "Sneha",
+  "runtime_s": 13.925796650000848,
+  "params": {
+    "hidden_dim": 64,
+    "dropout": 0.5,
+    "learning_rate": 0.005,
+    "epochs": 100,
+    "patience": 15,
+    "min_df": 5,
+    "max_features": 20000,
+    "window_size": 20,
+    "seed": 42,
+    "num_classes": 6,
+    "top_k": 10
+  },
+  "notes": "Final held-out test evaluation using the checkpoint selected by validation macro-F1. Test labels are used only for this final evaluation, not for training or model selection.",
+  "n": 1283,
+  "accuracy": 0.1979734996102884,
+  "precision_macro": 0.29445378151260504,
+  "recall_macro": 0.16995755305867666,
+  "f1_macro": 0.060893790796621994,
+  "f1_weighted": 0.07103724100781876
+}

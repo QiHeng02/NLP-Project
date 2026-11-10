@@ -1,0 +1,30 @@
+{
+  "timestamp": "20261109-234319-418721",
+  "model": "gat",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "test",
+  "author": "Sneha",
+  "runtime_s": 27.482007077000162,
+  "params": {
+    "hidden_dim": 64,
+    "dropout": 0.5,
+    "learning_rate": 0.001,
+    "epochs": 34,
+    "patience": 15,
+    "min_df": 5,
+    "max_features": 20000,
+    "window_size": 20,
+    "seed": 42,
+    "num_classes": 2,
+    "top_k": 20
+  },
+  "notes": "Final held-out test evaluation using the checkpoint selected by validation macro-F1. Test labels are used only for this final evaluation, not for training or model selection.",
+  "n": 2140,
+  "accuracy": 0.8560747663551402,
+  "precision_macro": 0.8662847236133319,
+  "recall_macro": 0.8521271008403362,
+  "f1_macro": 0.8538161888058224,
+  "f1_fake": 0.8356456776947705,
+  "roc_auc": 0.9488340336134453
+}

@@ -1,0 +1,29 @@
+{
+  "timestamp": "20261109-230912-375763",
+  "model": "textgcn",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "test",
+  "author": "Sneha",
+  "runtime_s": 56.77974731499853,
+  "params": {
+    "hidden_dim": 200,
+    "dropout": 0.5,
+    "learning_rate": 0.02,
+    "epochs": 100,
+    "patience": 10,
+    "min_df": 5,
+    "max_features": 20000,
+    "window_size": 20,
+    "seed": 42,
+    "num_classes": 2
+  },
+  "notes": "Final held-out test evaluation using the checkpoint selected by validation macro-F1. Test labels are used only for this final evaluation, not for training or model selection.",
+  "n": 2140,
+  "accuracy": 0.9247663551401869,
+  "precision_macro": 0.9281729638318861,
+  "recall_macro": 0.9228728991596639,
+  "f1_macro": 0.9242362770884336,
+  "f1_fake": 0.9178990311065782,
+  "roc_auc": 0.9772067577030812
+}
