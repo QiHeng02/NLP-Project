@@ -1,0 +1,27 @@
+{
+  "timestamp": "20261110-194320-260247",
+  "model": "llm-zero-shot",
+  "train_dataset": "isot",
+  "dataset": "isot",
+  "split": "test",
+  "author": "Keith",
+  "runtime_s": 3130.18,
+  "params": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "prompt": "Classify the text as real or fake. 'Fake' means it makes a false or misleading factual claim; 'real' means it does not. Judge the claim, not the writing style. If uncertain, choose the more likely label. Reply with only the label, no explanation.",
+    "seed": 42,
+    "sample_n": 500,
+    "population_n": 3823,
+    "max_input_tokens": 1024,
+    "truncation_policy": "head_tail_preserve_assistant_v2",
+    "decoding_policy": "constrained_label_tokens_v1",
+    "max_new_tokens": 12
+  },
+  "notes": "Stratified sample of 500/3823; zero-shot; uncalibrated labels",
+  "n": 500,
+  "accuracy": 0.45,
+  "precision_macro": 0.22545090180360722,
+  "recall_macro": 0.497787610619469,
+  "f1_macro": 0.3103448275862069,
+  "f1_fake": 0.6206896551724138
+}

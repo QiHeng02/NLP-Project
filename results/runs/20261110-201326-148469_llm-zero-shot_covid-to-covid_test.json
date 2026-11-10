@@ -1,0 +1,27 @@
+{
+  "timestamp": "20261110-201326-148469",
+  "model": "llm-zero-shot",
+  "train_dataset": "covid",
+  "dataset": "covid",
+  "split": "test",
+  "author": "Keith",
+  "runtime_s": 695.55,
+  "params": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "prompt": "Classify the text as real or fake. 'Fake' means it makes a false or misleading factual claim; 'real' means it does not. Judge the claim, not the writing style. If uncertain, choose the more likely label. Reply with only the label, no explanation.",
+    "seed": 42,
+    "sample_n": 500,
+    "population_n": 2140,
+    "max_input_tokens": 1024,
+    "truncation_policy": "head_tail_preserve_assistant_v2",
+    "decoding_policy": "constrained_label_tokens_v1",
+    "max_new_tokens": 12
+  },
+  "notes": "Stratified sample of 500/2140; zero-shot; uncalibrated labels",
+  "n": 500,
+  "accuracy": 0.478,
+  "precision_macro": 0.7384769539078156,
+  "recall_macro": 0.5019083969465649,
+  "f1_macro": 0.3267330819115621,
+  "f1_fake": 0.6458616010854816
+}

@@ -1,0 +1,27 @@
+{
+  "timestamp": "20261110-200150-507008",
+  "model": "llm-zero-shot",
+  "train_dataset": "liar6",
+  "dataset": "liar6",
+  "split": "test",
+  "author": "Keith",
+  "runtime_s": 532.1,
+  "params": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "prompt": "Rate the factual truthfulness of the claim using exactly one label: pants-fire, false, barely-true, half-true, mostly-true, true. Choose the most likely label if uncertain. Reply with only the label, no explanation.",
+    "seed": 42,
+    "sample_n": 500,
+    "population_n": 1283,
+    "max_input_tokens": 1024,
+    "truncation_policy": "head_tail_preserve_assistant_v2",
+    "decoding_policy": "constrained_label_tokens_v1",
+    "max_new_tokens": 12
+  },
+  "notes": "Stratified sample of 500/1283; zero-shot; uncalibrated labels",
+  "n": 500,
+  "accuracy": 0.206,
+  "precision_macro": 0.09587134675336728,
+  "recall_macro": 0.17655178645605743,
+  "f1_macro": 0.08749337080310328,
+  "f1_weighted": 0.1026163201259684
+}

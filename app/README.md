@@ -1,20 +1,34 @@
-# Streamlit demo (owner: F)
+# Streamlit fake news model explorer
 
 **Goal (rubric: Presentation):** paste a news article, claim or post → get real/fake, a confidence
 score, and the words that drove the prediction (LIME highlights).
 
-## Planned features
-1. Text box + "format" selector (article / claim / social post) that picks the model trained on the matching dataset
-2. Prediction + probability bar
-3. LIME word highlights (green = real, red = fake)
-4. Optional: side-by-side comparison of the classical model vs the transformer on the same input
-5. Example inputs from each test set (one click to load)
+## Features
+1. Format selector (article / claim / social post) chooses the matching dataset.
+2. Saved DistilBERT or classical model selector, result card, fake score and CPU latency.
+3. Optional side-by-side comparison of the two model families on the same input.
+4. LIME highlights (green = pushes toward real, red = pushes toward fake).
+5. Validation examples with dataset labels shown after prediction.
 
 ## Requirements
 - Load a saved model from `models/` that follows the shared interface (`predict_proba(list[str])`, see `src/models/README.md`)
 - Prediction under 1 s on CPU (requirement R4). DistilBERT or the classical model qualify; check latency before choosing.
 
-Run (once `streamlit_app.py` exists):
+Install `requirements.txt` and place the trusted team checkpoints at:
+
+| Format | DistilBERT | Classical |
+|---|---|---|
+| Article | `models/transformers/isot/distilbert/` | `models/classical/isot/tfidf-svm.joblib` |
+| Claim | `models/transformers/liar/distilbert/` | `models/classical/liar/bow-nb.joblib` |
+| Post | `models/transformers/covid/distilbert/` | `models/classical/covid/tfidf-svm.joblib` |
+
+Run from the repository root:
 ```bash
 streamlit run app/streamlit_app.py
 ```
+
+The UI loads only saved binary models. LIAR-6 is included in the experiment runner,
+but its six-class output is not shown as a fake/real probability.
+
+The zero-shot evaluation and explanation figure workflow is documented in
+[`docs/llm_explainability_demo.md`](../docs/llm_explainability_demo.md).
