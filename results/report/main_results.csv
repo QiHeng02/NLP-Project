@@ -1,0 +1,12 @@
+model,family,author,ISOT F1,COVID F1,LIAR F1,LIAR-6 Acc,LIAR-6 F1
+TF-IDF + LR (baseline),Baseline,Qi Heng,0.9796,0.9287,0.5921,0.2518,0.2192
+bow-nb,Traditional ML,Sharmayn,,,0.6123,,
+glove-lr,Traditional ML,Sharmayn,0.9622,0.88,0.5885,0.2705,0.2479
+tfidf-lr,Traditional ML,Sharmayn,,,,0.2432,0.2299
+tfidf-svm,Traditional ML,Sharmayn,0.9902,0.9475,,,
+BiLSTM,Sequential DL,Arshad,0.9963,0.9508,0.5948,0.2463,0.2397
+gat,Graph,Sneha,0.8253,0.8538,0.3663,0.198,0.0609
+textgcn,Graph,Sneha,0.9622,0.9242,0.6064,0.2206,0.1953
+bert,Transformer,Menujaa,0.9995,0.9728,0.6267,0.2868,0.2861
+distilbert,Transformer,Menujaa,0.9979,0.9738,0.6458,0.2907,0.2775
+roberta,Transformer,Menujaa,0.9984,0.9761,0.6389,0.2977,0.2804
