@@ -11,5 +11,6 @@
 | bert | Transformer | **0.999** | 0.973 | 0.627 | 0.287 | **0.286** |
 | distilbert | Transformer | 0.998 | 0.974 | **0.646** | 0.291 | 0.277 |
 | roberta | Transformer | 0.998 | **0.976** | 0.639 | **0.298** | 0.280 |
+| llm-zero-shot | LLM | 0.310 | 0.327 | 0.299 | 0.206 | 0.087 |
 
 Test set, macro-F1 unless marked Acc (accuracy). **Bold** = best per column.

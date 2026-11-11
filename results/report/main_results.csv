@@ -10,3 +10,4 @@ textgcn,Graph,Sneha,0.9622,0.9242,0.6064,0.2206,0.1953
 bert,Transformer,Menujaa,0.9995,0.9728,0.6267,0.2868,0.2861
 distilbert,Transformer,Menujaa,0.9979,0.9738,0.6458,0.2907,0.2775
 roberta,Transformer,Menujaa,0.9984,0.9761,0.6389,0.2977,0.2804
+llm-zero-shot,LLM,Keith,0.3103,0.3267,0.2987,0.206,0.0875
